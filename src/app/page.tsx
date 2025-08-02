@@ -1,47 +1,47 @@
 import { Box, Flex } from '@chakra-ui/react';
 import { css } from '../../styled-system/css';
-import ThemeToggleButton from "@/components/theme/themeToggle";
 import SideBar from "@/components/layout/sidebar";
 import DescriptionSection from "@/components/layout/descriptionSection";
 import DashboardSection from "@/components/layout/dashboardSection";
 
+import { useQuery } from '@tanstack/react-query';
+import Loader from '@/components/ui/loader';
+import HomePage from '@/screen/homepage';
+
+
+const baseLayoutStyles = css({
+  height: '100vh',
+  display: 'flex',
+  flexDirection: 'row',
+  position: 'relative',
+  backgroundColor: 'gray.100',
+});
+
+const contentAreaStyles = css({
+  flex: '1',
+  gap: '4',
+  padding: 'spacing.24',
+});
+
 export default function Home() {
   return (
-    <Box className={css({
-      height: '100vh',
-      display: 'flex',
-      flexDirection: 'row',
-      position: 'relative'
-    })}>
-      {/* Theme Toggle positioned absolutely */}
-      <Box className={css({
-        position: 'absolute',
-        top: '4',
-        right: '4',
-        zIndex: '10'
-      })}>
-        <ThemeToggleButton />
-      </Box>
-
-      {/* Main layout */}
+    <Box className={baseLayoutStyles}>
       <Flex className={css({
         width: 'full',
         height: 'full'
       })}>
-        {/* Sidebar */}
         <SideBar />
-
-        {/* Content area */}
-        <Flex className={css({
-          flex: '1',
-          gap: '2',
-          padding: '4',
-          overflow: 'auto'
-        })}>
-          <DescriptionSection />
-          <DashboardSection />
-        </Flex>
+        
+        <HomePage
+          contentAreaStyles={contentAreaStyles}
+         
+        />
       </Flex>
     </Box>
   );
 }
+
+
+
+
+

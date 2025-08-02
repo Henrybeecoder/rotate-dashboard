@@ -6,10 +6,8 @@ export default defineConfig({
 
   include: ['./src/**/*.{js,jsx,ts,tsx}', './pages/**/*.{js,jsx,ts,tsx}'],
 
-
   exclude: [],
 
- 
   theme: {
     extend: {
       tokens: {
@@ -53,7 +51,8 @@ export default defineConfig({
             100: {value: '#0053B5'},
           },
           gray: {
-            50: {value: '#f9f9f9'}
+            50: {value: '#f9f9f9'},
+            100: {value: '#FAFAFA'},
           }
         },
         fonts: {
@@ -111,12 +110,14 @@ export default defineConfig({
           sm: { value: '0 1px 2px 0 rgb(0 0 0 / 0.05)' },
           md: { value: '0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1)' },
           lg: { value: '0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1)' },
-          xl: { value: '0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1)' }
+          xl: { value: '0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1)' },
+          'description-card': { value: '0px 1px 3px 0px #0000000D, 0px 1px 2px 0px #0000001A' },
+          'sidebar-card': { value: '0px 16px 18px 0px #0000000F'},
+          'dashboard-card': { value: '0px 1px 3px 0px #0000000D, 0px 1px 2px 0px #0000001A' },
         }
       }
     }
   },
-
 
   outdir: 'styled-system',
 
