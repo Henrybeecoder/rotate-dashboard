@@ -51,6 +51,9 @@ export default defineConfig({
            blue: {
             50: {value: '#ECF5FF'},
             100: {value: '#0053B5'},
+          },
+          gray: {
+            50: {value: '#f9f9f9'}
           }
         },
         fonts: {
