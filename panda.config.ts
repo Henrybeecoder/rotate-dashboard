@@ -1,58 +1,56 @@
 import { defineConfig } from '@pandacss/dev'
 
 export default defineConfig({
-  // Whether to use css reset
+  
   preflight: true,
 
-  // Where to look for your css declarations
   include: ['./src/**/*.{js,jsx,ts,tsx}', './pages/**/*.{js,jsx,ts,tsx}'],
 
-  // Files to exclude
+
   exclude: [],
 
-  // Useful for theme customization
+ 
   theme: {
     extend: {
       tokens: {
         colors: {
           primary: {
-            50: { value: '#f0f9ff' },
-            100: { value: '#e0f2fe' },
-            200: { value: '#bae6fd' },
-            300: { value: '#7dd3fc' },
-            400: { value: '#38bdf8' },
-            500: { value: '#0ea5e9' },
-            600: { value: '#0284c7' },
-            700: { value: '#0369a1' },
-            800: { value: '#075985' },
-            900: { value: '#0c4a6e' },
+            50: { value: '#E9FAF0' },
+            100: { value: '#02983E' },
+          
           },
           secondary: {
-            50: { value: '#f8fafc' },
-            100: { value: '#f1f5f9' },
-            200: { value: '#e2e8f0' },
-            300: { value: '#cbd5e1' },
-            400: { value: '#94a3b8' },
-            500: { value: '#64748b' },
-            600: { value: '#475569' },
-            700: { value: '#334155' },
-            800: { value: '#1e293b' },
-            900: { value: '#0f172a' },
+            500: { value: '#667085' },
+            700: { value: '#525D73' },
+            800: { value: '#334155' },
+            900: { value: '#404A60' },
+            
           },
+        
           success: {
-            50: { value: '#f0fdf4' },
-            500: { value: '#22c55e' },
-            600: { value: '#16a34a' },
+            50: { value: '#E9FAF0' },
+            100: { value: '#E9FAF0' },
+       
           },
           error: {
-            50: { value: '#fef2f2' },
-            500: { value: '#ef4444' },
-            600: { value: '#dc2626' },
+            50: { value: '#fff1f0' },
+            100: { value: '#E5372B' },
+         
           },
           warning: {
-            50: { value: '#fffbeb' },
-            500: { value: '#f59e0b' },
-            600: { value: '#d97706' },
+            50: { value: '#FFF9ED' },
+            100: { value: '#EBA622' },
+          
+          },
+
+          purple: {
+            50: {value: '#F2EDFF'},
+            100: {value: '#6236CC'},
+          },
+
+           blue: {
+            50: {value: '#ECF5FF'},
+            100: {value: '#0053B5'},
           }
         },
         fonts: {
@@ -70,7 +68,7 @@ export default defineConfig({
           '3xl': { value: '1.875rem' }, // 30px
           '4xl': { value: '2.25rem' },  // 36px
           '5xl': { value: '3rem' },     // 48px
-          '6xl': { value: '3.75rem' }   // 60px
+          '6xl': { value: '3.75rem' }   
         },
         fontWeights: {
           thin: { value: '100' },
@@ -116,7 +114,7 @@ export default defineConfig({
     }
   },
 
-  // The output directory for your css system
+
   outdir: 'styled-system',
 
   jsxFramework: 'react'
