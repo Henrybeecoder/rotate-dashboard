@@ -1,5 +1,5 @@
 'use client'
-import { HoverTooltip } from "../hoverTooltip";
+
 import { css } from '../../../../styled-system/css';
 import { Box, Flex, Text, Image } from '@chakra-ui/react';
 import type { DashboardInfoProps } from "@/types";

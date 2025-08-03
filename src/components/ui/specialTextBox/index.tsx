@@ -1,5 +1,4 @@
 import { Box, Text } from '@chakra-ui/react';
-import { css } from '../../../../styled-system/css';
 
 interface SpecialTextBoxProps {
   width?: string;
@@ -8,45 +7,42 @@ interface SpecialTextBoxProps {
 }
 
 export default function SpecialTextBox({ width, content, status }: SpecialTextBoxProps) {
-  // Define status styles using the actual color values from your config
+  // Define status styles using Chakra UI's style props
   const statusStyles = {
     error: {
-      bg: '#fff1f0', // error.50
-      color: '#E5372B' // error.100
+      bg: '#fff1f0',
+      color: '#E5372B'
     },
     neutral: {
-      bg: '#F2EDFF', // purple.50
-      color: '#6236CC' // purple.100
+      bg: '#F2EDFF',
+      color: '#6236CC'
     },
     pending: {
-      bg: '#FFF9ED', // warning.50
-      color: '#EBA622' // warning.100
+      bg: '#FFF9ED',
+      color: '#EBA622'
     },
     justAdded: {
-      bg: '#ECF5FF', // blue.50
-      color: '#0053B5' // blue.100
+      bg: '#ECF5FF',
+      color: '#0053B5'
     },
     success: {
-      bg: '#E9FAF0', // success.50
-      color: '#02983E' // primary.100
+      bg: '#E9FAF0',
+      color: '#02983E'
     }
   };
 
-  const textBoxStyle = css({
-    fontFamily: 'mono',
-    fontWeight: 'semibold',
-    fontSize: '13px',
-    lineHeight: '22px',
-    letterSpacing: '0.6px',
-    padding: '8px 12px',
-    borderRadius: 'md',
-    width: width || 'auto',
-    backgroundColor: statusStyles[status].bg,
-    color: statusStyles[status].color
-  });
-
   return (
-    <Box className={textBoxStyle}>
+    <Box
+      className="ibm-plex-mono-semibold"
+      fontWeight="semibold"
+      fontSize="13px"
+      lineHeight="22px"
+      letterSpacing="0.6px"
+      p="8px 12px"
+      borderRadius="md"
+      w={width || 'auto'}
+      {...statusStyles[status]}
+    >
       <Text>{content}</Text>
     </Box>
   );

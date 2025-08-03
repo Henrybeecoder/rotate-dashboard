@@ -3,7 +3,7 @@ import { Box, Flex } from '@chakra-ui/react';
 import { css } from '../../../styled-system/css';
 import { useQuery } from '@tanstack/react-query';
 import Loader from '@/components/ui/loader';
-import SideBar from "@/components/layout/sidebar";
+
 import DescriptionSection from "@/components/layout/descriptionSection";
 import DashboardSection from "@/components/layout/dashboardSection";
 import { extraListData, assetTableData } from '@/lib/data';

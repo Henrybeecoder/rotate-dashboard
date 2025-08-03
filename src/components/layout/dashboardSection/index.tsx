@@ -51,7 +51,7 @@ export default function DashboardSection({isDark, assetTableData}: DashboardSect
         fontSize={'20px'}
         lineHeight={'22px'}
         letterSpacing={'0.6px'}
-        my={2}
+        my={4}
         transition="color 0.3s ease"
       >
         Lorem ipsum dolor sit
