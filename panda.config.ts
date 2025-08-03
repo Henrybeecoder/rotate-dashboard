@@ -48,6 +48,7 @@ export default defineConfig({
             200: { value: '#F0F1F3' },
             300: { value: '#E0E2E7' },
             400: { value: '#858D9D' },
+            900: {value: '#030229'},
           },
           neutral: {
             600: { value: '#525D73' },

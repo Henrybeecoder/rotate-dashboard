@@ -4,12 +4,14 @@ import { useState, useEffect } from "react";
 import { ChevronLeftIcon, HamburgerIcon, CloseIcon } from "@chakra-ui/icons";
 import { IconButton, Box, Text, Flex, VStack, useBreakpointValue } from "@chakra-ui/react";
 import Link from "next/link";
+import { useTheme } from '@/contexts/themeContext';
+import { motion, AnimatePresence } from 'framer-motion';
 
 const menuItems = [
   { icon: "/assets/icons/sidebar-icons/dashboard-icon.svg", text: "Dashboard", href: "/dashboard" },
   { icon: "/assets/icons/sidebar-icons/alert-icon.svg", text: "Alerts", href: "/alerts" },
   { icon: "/assets/icons/sidebar-icons/box-icon.svg", text: "Products", href: "/products" },
-  { icon: "/assets/icons/sidebar-icons/swing-icon.svg", text: "Analytics", href: "/analytics" },
+  { icon: "/assets/icons/sidebar-icons/swing-icon.svg", text: "Analytics", href: "/" },
   { icon: "/assets/icons/sidebar-icons/connect-icon.svg", text: "Connect", href: "/connect" },
   { icon: "/assets/icons/sidebar-icons/note-icon.svg", text: "Notes", href: "/notes" },
   { icon: "/assets/icons/sidebar-icons/graph-icon.svg", text: "Reports", href: "/reports" },
@@ -20,42 +22,116 @@ const lastmenuItems = [
   { icon: "/assets/icons/sidebar-icons/profile-icon.svg", text: "Profile", href: "/profile" },
 ];
 
-const Tooltip = ({ children, text, show }: { children: React.ReactNode; text: string; show: boolean }) => (
-  <Box position="relative" display="inline-block">
-    {children}
-    {show && (
-      <Box
+const MotionBox = motion(Box);
+const MotionFlex = motion(Flex);
+
+const CreativeThemeToggle = ({
+  size = 'sm',
+  variant = 'ghost',
+  showLabel = false
+}: {
+  size?: 'sm' | 'md' | 'lg'
+  variant?: 'ghost' | 'outline' | 'solid'
+  showLabel?: boolean
+}) => {
+  const { theme, actualTheme, toggleTheme } = useTheme()
+
+  if (!actualTheme) return null
+
+  const isDark = actualTheme === 'dark'
+
+  return (
+    <MotionBox
+      whileHover={{ scale: 1.1 }}
+      whileTap={{ scale: 0.95 }}
+      className={css({
+        position: 'relative',
+        width: '40px',
+        height: '24px',
+        bg: isDark ? 'blue.600' : 'yellow.300',
+        borderRadius: '12px',
+        cursor: 'pointer',
+        display: 'flex',
+        alignItems: 'center',
+        transition: 'background-color 0.3s ease',
+        border: '2px solid',
+        borderColor: isDark ? 'blue.400' : 'yellow.400',
+      })}
+      onClick={toggleTheme}
+    >
+      <MotionBox
+        animate={{
+          x: isDark ? 18 : 2,
+          rotate: isDark ? 180 : 0,
+        }}
+        transition={{
+          type: "spring",
+          stiffness: 500,
+          damping: 30
+        }}
         className={css({
-          position: "absolute",
-          left: "calc(100% + 8px)",
-          top: "50%",
-          transform: "translateY(-50%)",
-          bg: "green.500",
-          color: "black",
-          px: "8px",
-          py: "4px",
-          borderRadius: "4px",
-          fontSize: "sm",
-          fontWeight: "medium",
-          whiteSpace: "nowrap",
-          zIndex: 1000,
-          opacity: 0,
-          animation: "fadeIn 0.2s ease forwards",
-          _before: {
-            content: '""',
-            position: "absolute",
-            right: "100%",
-            top: "50%",
-            transform: "translateY(-50%)",
-            borderWidth: "4px",
-            borderStyle: "solid",
-            borderColor: "transparent green.500 transparent transparent",
-          },
+          width: '16px',
+          height: '16px',
+          bg: 'white',
+          borderRadius: '50%',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          fontSize: '8px',
+          boxShadow: '0 2px 4px rgba(0,0,0,0.2)',
         })}
       >
-        {text}
-      </Box>
-    )}
+        {isDark ? '🌙' : '☀️'}
+      </MotionBox>
+    </MotionBox>
+  )
+}
+
+const Tooltip = ({ children, text, show, isDark }: { 
+  children: React.ReactNode; 
+  text: string; 
+  show: boolean;
+  isDark?: boolean;
+}) => (
+  <Box position="relative" display="inline-block">
+    {children}
+    <AnimatePresence>
+      {show && (
+        <MotionBox
+          initial={{ opacity: 0, x: -10, scale: 0.9 }}
+          animate={{ opacity: 1, x: 0, scale: 1 }}
+          exit={{ opacity: 0, x: -10, scale: 0.9 }}
+          transition={{ duration: 0.2, ease: "easeOut" }}
+          className={css({
+            position: "absolute",
+            left: "calc(100% + 8px)",
+            top: "50%",
+            transform: "translateY(-50%)",
+            bg: isDark ? "gray.700" : "gray.800",
+            color: "white",
+            px: "8px",
+            py: "4px",
+            borderRadius: "4px",
+            fontSize: "sm",
+            fontWeight: "medium",
+            whiteSpace: "nowrap",
+            zIndex: 1000,
+            _before: {
+              content: '""',
+              position: "absolute",
+              right: "100%",
+              top: "50%",
+              transform: "translateY(-50%)",
+              borderWidth: "4px",
+              borderStyle: "solid",
+              borderColor: isDark ? "transparent token(colors.gray.700) transparent transparent" : "transparent token(colors.gray.800) transparent transparent",
+            },
+          })}
+        >
+          {text}
+        </MotionBox>
+      )}
+    </AnimatePresence>
   </Box>
 );
 
@@ -64,8 +140,10 @@ const SideBar = () => {
   const [activeItem, setActiveItem] = useState<string | null>(null);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [hoveredItem, setHoveredItem] = useState<string | null>(null);
+  const { actualTheme } = useTheme();
   
   const isMobile = useBreakpointValue({ base: true, md: false });
+  const isDark = actualTheme === 'dark';
 
   useEffect(() => {
     if (isMobile) {
@@ -84,28 +162,24 @@ const SideBar = () => {
   };
 
   const MenuItem = ({ item, isLast = false }: { item: typeof menuItems[0]; isLast?: boolean }) => (
-    <Tooltip text={item.text} show={!isExpanded && hoveredItem === item.text && !isMobile}>
+    <Tooltip text={item.text} show={!isExpanded && hoveredItem === item.text && !isMobile} isDark={isDark}>
       <Link href={item.href}>
-        <Box
+        <MotionBox
+          whileHover={{ 
+            backgroundColor: isDark ? "rgba(55, 65, 81, 0.8)" : "rgba(243, 244, 246, 0.8)"
+          }}
+          whileTap={{ scale: 0.98 }}
           className={css({
             display: "flex",
             alignItems: "center",
-            gap: "16px",
-            padding: "12px",
+            justifyContent: isExpanded ? "flex-start" : "center",
+            gap: isExpanded ? "16px" : "0",
+            padding: isExpanded ? "12px" : "12px 8px",
             borderRadius: "12px",
             cursor: "pointer",
             minHeight: "48px",
             transition: "all 0.2s ease",
-            _hover: {
-              bg: "#f9f9f9",
-              "& img": {
-                filter: "brightness(0) invert(0.4)",
-              },
-              "& p": {
-                color: "#525d73",
-              },
-            },
-            bg: activeItem === item.text ? "primary.50" : "transparent",
+            bg: activeItem === item.text ? (isDark ? "gray.600" : "primary.50") : "transparent",
           })}
           onClick={() => {
             setActiveItem(item.text);
@@ -130,269 +204,328 @@ const SideBar = () => {
                 width: "24px",
                 height: "24px",
                 transition: "filter 0.2s ease",
+                filter: isDark ? "brightness(0) invert(0.8)" : "brightness(0) invert(0.4)",
               })}
             />
           </Box>
-          {(isExpanded || (isMobile && mobileMenuOpen)) && (
+          {isExpanded || (isMobile && mobileMenuOpen) ? (
             <Text
               className={css({
                 fontSize: "md",
                 fontWeight: "medium",
-                color: activeItem === item.text ? "black" : "secondary.700",
+                color: activeItem === item.text 
+                  ? (isDark ? "white" : "black") 
+                  : (isDark ? "gray.300" : "secondary.700"),
                 whiteSpace: "nowrap",
                 overflow: "hidden",
-                opacity: isExpanded || (isMobile && mobileMenuOpen) ? 1 : 0,
-                transition: "opacity 0.3s ease",
               })}
             >
               {item.text}
             </Text>
-          )}
-        </Box>
+          ) : null}
+        </MotionBox>
       </Link>
     </Tooltip>
   );
 
-  // Mobile Header
   if (isMobile) {
     return (
       <>
-        {/* Mobile Header - Always visible */}
-        <Box
+        <MotionBox
+          initial={{ y: -60 }}
+          animate={{ y: 0 }}
           className={css({
             position: "fixed",
             top: 0,
             left: 0,
             right: 0,
-            bg: "white",
+            bg: isDark ? "gray.800" : "white",
             zIndex: 1000,
             borderBottom: "1px solid",
-            borderColor: "gray.200",
+            borderColor: isDark ? "gray.700" : "gray.200",
             px: "16px",
             py: "12px",
             height: "60px",
           })}
         >
           <Flex justify="space-between" align="center" height="100%">
-            <img 
-              src="/logo.png" 
-              alt="Logo" 
-              className={css({ 
-                height: "32px",
-                width: "auto"
-              })} 
-            />
-            <IconButton
-              aria-label="toggle menu"
-              onClick={toggleSidebar}
-              variant="ghost"
-              size="sm"
-            >
-              <HamburgerIcon />
-            </IconButton>
-          </Flex>
-        </Box>
-
-        {/* Full Screen Mobile Sidebar */}
-        {mobileMenuOpen && (
-          <>
-            {/* Backdrop */}
-            <Box
-              className={css({
-                position: "fixed",
-                top: 0,
-                left: 0,
-                right: 0,
-                bottom: 0,
-                bg: "blackAlpha.600",
-                zIndex: 1998,
-              })}
-              onClick={() => setMobileMenuOpen(false)}
-            />
-            
-            {/* Full Screen Sidebar */}
-            <Box
-              className={css({
-                position: "fixed",
-                top: 0,
-                left: 0,
-                bottom: 0,
-                right: 0,
-                bg: "white",
-                zIndex: 1999,
-                display: "flex",
-                flexDirection: "column",
-                animation: "slideInFromLeft 0.3s ease forwards",
-              })}
-            >
-              {/* Mobile Sidebar Header */}
-              <Box
+            <Box>
+              <img 
+                src="/logo.png" 
+                alt="Logo" 
+                className={css({ 
+                  height: "32px",
+                  width: "auto",
+                  filter: isDark ? "brightness(0) invert(1)" : "none",
+                })} 
+              />
+            </Box>
+            <Flex align="center" gap={2}>
+              <CreativeThemeToggle />
+              <IconButton
+                aria-label="toggle menu"
+                onClick={toggleSidebar}
+                variant="ghost"
+                size="sm"
                 className={css({
-                  px: "16px",
-                  py: "12px",
-                  borderBottom: "1px solid",
-                  borderColor: "gray.200",
-                  height: "60px",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "space-between",
+                  color: isDark ? "white" : "black",
+                  _hover: {
+                    bg: isDark ? "gray.700" : "gray.100",
+                  }
                 })}
               >
-                <img 
-                  src="/logo.png" 
-                  alt="Logo" 
-                  className={css({ 
-                    height: "32px",
-                    width: "auto"
-                  })} 
-                />
-                <IconButton
-                  aria-label="close menu"
-                  onClick={() => setMobileMenuOpen(false)}
-                  variant="ghost"
-                  size="sm"
-                >
-                  <CloseIcon />
-                </IconButton>
-              </Box>
+                <HamburgerIcon />
+              </IconButton>
+            </Flex>
+          </Flex>
+        </MotionBox>
 
-              {/* Mobile Sidebar Content */}
-              <Box
+        <AnimatePresence>
+          {mobileMenuOpen && (
+            <>
+              <MotionBox
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
                 className={css({
-                  flex: 1,
-                  px: "16px",
-                  py: "24px",
+                  position: "fixed",
+                  top: 0,
+                  left: 0,
+                  right: 0,
+                  bottom: 0,
+                  bg: "blackAlpha.600",
+                  zIndex: 1998,
+                })}
+                onClick={() => setMobileMenuOpen(false)}
+              />
+              
+              <MotionBox
+                initial={{ x: "-100%" }}
+                animate={{ x: 0 }}
+                exit={{ x: "-100%" }}
+                transition={{ type: "spring", stiffness: 300, damping: 30 }}
+                className={css({
+                  position: "fixed",
+                  top: 0,
+                  left: 0,
+                  bottom: 0,
+                  right: 0,
+                  bg: isDark ? "gray.800" : "white",
+                  zIndex: 1999,
                   display: "flex",
                   flexDirection: "column",
-                  justifyContent: "space-between",
                 })}
               >
-                {/* Main Menu Items */}
                 <Box
                   className={css({
+                    px: "16px",
+                    py: "12px",
+                    borderBottom: "1px solid",
+                    borderColor: isDark ? "gray.700" : "gray.200",
+                    height: "60px",
                     display: "flex",
-                    flexDirection: "column",
-                    gap: "8px",
+                    alignItems: "center",
+                    justifyContent: "space-between",
                   })}
                 >
-                  {menuItems.map((item) => (
-                    <MenuItem key={item.text} item={item} />
-                  ))}
+                  <img 
+                    src="/logo.png" 
+                    alt="Logo" 
+                    className={css({ 
+                      height: "32px",
+                      width: "auto",
+                      filter: isDark ? "brightness(0) invert(1)" : "none",
+                    })} 
+                  />
+                  <IconButton
+                    aria-label="close menu"
+                    onClick={() => setMobileMenuOpen(false)}
+                    variant="ghost"
+                    size="sm"
+                    className={css({
+                      color: isDark ? "white" : "black",
+                      _hover: {
+                        bg: isDark ? "gray.700" : "gray.100",
+                      }
+                    })}
+                  >
+                    <CloseIcon />
+                  </IconButton>
                 </Box>
 
-                {/* Bottom Section */}
-                <Box>
-                  {/* Settings and Profile Menu Items */}
+                <Box
+                  className={css({
+                    flex: 1,
+                    px: "16px",
+                    py: "24px",
+                    display: "flex",
+                    flexDirection: "column",
+                    justifyContent: "space-between",
+                  })}
+                >
                   <Box
                     className={css({
                       display: "flex",
                       flexDirection: "column",
                       gap: "8px",
-                      mb: "24px",
-                      pt: "16px",
-                      borderTop: "1px solid",
-                      borderColor: "gray.200",
                     })}
                   >
-                    {lastmenuItems.map((item) => (
-                      <MenuItem key={item.text} item={item} isLast />
+                    {menuItems.map((item) => (
+                      <MenuItem key={item.text} item={item} />
                     ))}
                   </Box>
 
-                  {/* User Profile Section */}
-                  <Box
-                    className={css({
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "space-between",
-                      pt: "16px",
-                      borderTop: "1px solid",
-                      borderColor: "gray.200",
-                    })}
-                  >
-                    <Flex gap={3} alignItems="center" flex={1}>
-                      <img 
-                        src="/assets/icons/sidebar-icons/real-profile.svg" 
-                        alt="Profile" 
-                        className={css({
-                          width: "40px",
-                          height: "40px",
-                          minWidth: "40px",
-                        })}
-                      />
-                      <Box flex={1}>
-                        <Text fontSize="md" fontWeight="medium">John Doe</Text>
-                        <Text fontSize="sm" color="secondary.500">john@example.com</Text>
-                      </Box>
-                    </Flex>
-                    <IconButton
-                      aria-label="logout"
-                      variant="ghost"
-                      size="sm"
+                  <Box>
+                    <Box
                       className={css({
-                        minWidth: "32px",
-                        width: "32px",
-                        height: "32px",
-                        _hover: {
-                          opacity: 0.8,
-                        },
+                        display: "flex",
+                        flexDirection: "column",
+                        gap: "8px",
+                        mb: "24px",
+                        pt: "16px",
+                        borderTop: "1px solid",
+                        borderColor: isDark ? "gray.700" : "gray.200",
                       })}
                     >
-                      <img 
-                        src="/assets/icons/sidebar-icons/logout-icon.svg" 
-                        alt="Logout" 
+                      {lastmenuItems.map((item) => (
+                        <MenuItem key={item.text} item={item} isLast />
+                      ))}
+                    </Box>
+
+                    <Box
+                      className={css({
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "space-between",
+                        pt: "16px",
+                        borderTop: "1px solid",
+                        borderColor: isDark ? "gray.700" : "gray.200",
+                      })}
+                    >
+                      <Flex gap={3} alignItems="center" flex={1}>
+                        <img 
+                          src="/assets/icons/sidebar-icons/real-profile.svg" 
+                          alt="Profile" 
+                          className={css({
+                            width: "40px",
+                            height: "40px",
+                            minWidth: "40px",
+                            filter: isDark ? "brightness(0) invert(0.8)" : "none",
+                          })}
+                        />
+                        <Box flex={1}>
+                          <Text 
+                            fontSize="md" 
+                            fontWeight="medium"
+                            color={isDark ? "white" : "black"}
+                          >
+                            John Doe
+                          </Text>
+                          <Text 
+                            fontSize="sm" 
+                            color={isDark ? "gray.400" : "secondary.500"}
+                          >
+                            john@example.com
+                          </Text>
+                        </Box>
+                      </Flex>
+                      <IconButton
+                        aria-label="logout"
+                        variant="ghost"
+                        size="sm"
                         className={css({
-                          width: "18px",
-                          height: "18px",
+                          minWidth: "32px",
+                          width: "32px",
+                          height: "32px",
+                          color: isDark ? "white" : "black",
+                          _hover: {
+                            opacity: 0.8,
+                            bg: isDark ? "gray.700" : "gray.100",
+                          },
                         })}
-                      />
-                    </IconButton>
+                      >
+                        <img 
+                          src="/assets/icons/sidebar-icons/logout-icon.svg" 
+                          alt="Logout" 
+                          className={css({
+                            width: "18px",
+                            height: "18px",
+                            filter: isDark ? "brightness(0) invert(0.8)" : "none",
+                          })}
+                        />
+                      </IconButton>
+                    </Box>
                   </Box>
                 </Box>
-              </Box>
-            </Box>
-          </>
-        )}
+              </MotionBox>
+            </>
+          )}
+        </AnimatePresence>
       </>
     );
   }
 
-  // Desktop Sidebar
   return (
-    <Box
+    <MotionBox
+      animate={{
+        width: isExpanded ? "240px" : "80px"
+      }}
+      transition={{ duration: 0.3, ease: "easeInOut" }}
       py={6}
       px={4}
       className={css({
         position: "relative",
         shadow: "sidebar-card",
-        background: "white",
-        width: isExpanded ? "240px" : "80px",
+        background: isDark ? "gray.800" : "white",
         borderRadius: "28px",
-        transition: "width 0.3s ease",
         height: "100vh",
         zIndex: 10,
         display: "flex",
         flexDirection: "column",
       })}
     >
-      {/* Logo - only show when expanded OR always show at top when collapsed */}
-      <Box className={css({ mb: isExpanded ? "32px" : "24px" })}>
-        {isExpanded ? (
-          ''
-        ) : (
-          <Box className={css({ display: "flex", justifyContent: "center" })}>
-            <img 
-              src="/logo.png" 
-              alt="Logo" 
-              className={css({ 
-                width: "32px", 
-                height: "32px",
-                objectFit: "contain"
-              })} 
-            />
-          </Box>
-        )}
-      </Box>
+      {!isExpanded && (
+        <Box className={css({ 
+          mb: "32px",
+          display: "flex", 
+          justifyContent: "center",
+          alignItems: "center",
+          height: "40px"
+        })}>
+          <img 
+            src="/logo.png" 
+            alt="Logo" 
+            className={css({ 
+              width: "32px", 
+              height: "32px",
+              objectFit: "contain",
+              filter: isDark ? "brightness(0) invert(1)" : "none",
+            })} 
+          />
+        </Box>
+      )}
+
+      {isExpanded && (
+        <Box className={css({
+          mb: "32px",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          height: "40px"
+        })}>
+          <CreativeThemeToggle />
+        </Box>
+      )}
+      
+      {!isExpanded && (
+        <Box className={css({
+          display: "flex",
+          justifyContent: "center",
+          mb: "16px"
+        })}>
+          <CreativeThemeToggle />
+        </Box>
+      )}
       
       <IconButton
         aria-label="toggle sidebar"
@@ -411,8 +544,6 @@ const SideBar = () => {
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          transform: isExpanded ? "rotate(0deg)" : "rotate(180deg)",
-          transition: "transform 0.3s ease",
           _hover: {
             bg: "primary.100",
           },
@@ -427,7 +558,6 @@ const SideBar = () => {
         className={css({ height: '100%' })}
         spacing={0}
       >
-        {/* Main Menu Items */}
         <Box className={css({ 
           display: "flex", 
           flexDirection: "column", 
@@ -439,9 +569,7 @@ const SideBar = () => {
           ))}
         </Box>
 
-        {/* Bottom Section */}
         <Box className={css({ width: "100%" })}>
-          {/* Settings and Profile */}
           <Box className={css({ 
             display: "flex", 
             flexDirection: "column", 
@@ -453,7 +581,6 @@ const SideBar = () => {
             ))}
           </Box>
 
-          {/* User Profile Section */}
           <Box 
             className={css({
               display: "flex",
@@ -461,10 +588,10 @@ const SideBar = () => {
               alignItems: "center",
               pt: "16px",
               borderTopWidth: "1px",
-              borderTopColor: "gray.200",
+              borderTopColor: isDark ? "gray.700" : "gray.200",
             })}
           >
-            <Flex gap={2} alignItems="center" flex={1}>
+            <Flex gap={2} alignItems="center" flex={1} justify={isExpanded ? "flex-start" : "center"}>
               <img 
                 src="/assets/icons/sidebar-icons/real-profile.svg" 
                 alt="Profile" 
@@ -472,12 +599,24 @@ const SideBar = () => {
                   width: "32px",
                   height: "32px",
                   minWidth: "32px",
+                  filter: isDark ? "brightness(0) invert(0.8)" : "none",
                 })}
               />
               {isExpanded && (
                 <Box flex={1}>
-                  <Text fontSize="sm" fontWeight="medium">John Doe</Text>
-                  <Text fontSize="xs" color="secondary.500">john@example.com</Text>
+                  <Text 
+                    fontSize="sm" 
+                    fontWeight="medium"
+                    color={isDark ? "white" : "black"}
+                  >
+                    Lorem
+                  </Text>
+                  <Text 
+                    fontSize="xs" 
+                    color={isDark ? "gray.400" : "secondary.500"}
+                  >
+                    Lorem
+                  </Text>
                 </Box>
               )}
             </Flex>
@@ -490,8 +629,10 @@ const SideBar = () => {
                   minWidth: "24px",
                   width: "24px",
                   height: "24px",
+                  color: isDark ? "white" : "black",
                   _hover: {
                     opacity: 0.8,
+                    bg: isDark ? "gray.700" : "gray.100",
                   },
                 })}
               >
@@ -501,6 +642,7 @@ const SideBar = () => {
                   className={css({
                     width: "16px",
                     height: "16px",
+                    filter: isDark ? "brightness(0) invert(0.8)" : "none",
                   })}
                 />
               </IconButton>
@@ -508,30 +650,7 @@ const SideBar = () => {
           </Box>
         </Box>
       </VStack>
-
-      {/* Add CSS keyframes for animations */}
-      <style jsx>{`
-        @keyframes fadeIn {
-          from {
-            opacity: 0;
-            transform: translateY(-50%) translateX(-4px);
-          }
-          to {
-            opacity: 1;
-            transform: translateY(-50%) translateX(0);
-          }
-        }
-        
-        @keyframes slideInFromLeft {
-          from {
-            transform: translateX(-100%);
-          }
-          to {
-            transform: translateX(0);
-          }
-        }
-      `}</style>
-    </Box>
+    </MotionBox>
   );
 };
 

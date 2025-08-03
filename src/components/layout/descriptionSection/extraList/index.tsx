@@ -17,7 +17,7 @@ export default function ExtraList({ extraListData }: ExtraListProps) {
           alignItems="center"
           gap={4}
         >
-          <Flex flex={1} alignItems="center" gap={3}>
+          <Flex flex={1} alignItems="center" gap={2}>
             <Text
               fontSize="15px"
               lineHeight="22px"
@@ -34,7 +34,7 @@ export default function ExtraList({ extraListData }: ExtraListProps) {
               fontWeight="medium"
               color="secondary.500"
               width="120px"
-              textAlign="right"
+              textAlign="left"
             >
                 {item.completed && (
               <CheckIcon

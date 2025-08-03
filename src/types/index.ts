@@ -35,3 +35,16 @@ export interface PaginationInfo {
   totalItems: number;
   itemsPerPage: number;
 }
+
+export interface DropdownItem {
+  id: string;
+  title: string;
+  server_name: string;
+  text: string;
+  image: string;
+}
+
+export interface DropdownProps {
+  data: DropdownItem[];
+  isDark?: boolean;
+}
