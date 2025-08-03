@@ -1,11 +1,15 @@
 'use client';
 import { css } from "../../../../styled-system/css";
 import { useState, useEffect } from "react";
-import { ChevronLeftIcon, HamburgerIcon, CloseIcon } from "@chakra-ui/icons";
+import { ChevronLeftIcon, CloseIcon } from "@chakra-ui/icons";
 import { IconButton, Box, Text, Flex, VStack, useBreakpointValue } from "@chakra-ui/react";
 import Link from "next/link";
 import { useTheme } from '@/contexts/themeContext';
 import { motion, AnimatePresence } from 'framer-motion';
+import { ThemeToggle } from "@/components/theme/themeToggle";
+import { MobileHeader } from "../mobileHeader";
+import Tooltip from "../tooltip";
+import { MotionBox } from "@/utils";
 
 const menuItems = [
   { icon: "/assets/icons/sidebar-icons/dashboard-icon.svg", text: "Dashboard", href: "/dashboard" },
@@ -22,118 +26,9 @@ const lastmenuItems = [
   { icon: "/assets/icons/sidebar-icons/profile-icon.svg", text: "Profile", href: "/profile" },
 ];
 
-const MotionBox = motion(Box);
-const MotionFlex = motion(Flex);
 
-const CreativeThemeToggle = ({
-  size = 'sm',
-  variant = 'ghost',
-  showLabel = false
-}: {
-  size?: 'sm' | 'md' | 'lg'
-  variant?: 'ghost' | 'outline' | 'solid'
-  showLabel?: boolean
-}) => {
-  const { theme, actualTheme, toggleTheme } = useTheme()
 
-  if (!actualTheme) return null
 
-  const isDark = actualTheme === 'dark'
-
-  return (
-    <MotionBox
-      whileHover={{ scale: 1.1 }}
-      whileTap={{ scale: 0.95 }}
-      className={css({
-        position: 'relative',
-        width: '40px',
-        height: '24px',
-        bg: isDark ? 'blue.600' : 'yellow.300',
-        borderRadius: '12px',
-        cursor: 'pointer',
-        display: 'flex',
-        alignItems: 'center',
-        transition: 'background-color 0.3s ease',
-        border: '2px solid',
-        borderColor: isDark ? 'blue.400' : 'yellow.400',
-      })}
-      onClick={toggleTheme}
-    >
-      <MotionBox
-        animate={{
-          x: isDark ? 18 : 2,
-          rotate: isDark ? 180 : 0,
-        }}
-        transition={{
-          type: "spring",
-          stiffness: 500,
-          damping: 30
-        }}
-        className={css({
-          width: '16px',
-          height: '16px',
-          bg: 'white',
-          borderRadius: '50%',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          fontSize: '8px',
-          boxShadow: '0 2px 4px rgba(0,0,0,0.2)',
-        })}
-      >
-        {isDark ? '🌙' : '☀️'}
-      </MotionBox>
-    </MotionBox>
-  )
-}
-
-const Tooltip = ({ children, text, show, isDark }: { 
-  children: React.ReactNode; 
-  text: string; 
-  show: boolean;
-  isDark?: boolean;
-}) => (
-  <Box position="relative" display="inline-block">
-    {children}
-    <AnimatePresence>
-      {show && (
-        <MotionBox
-          initial={{ opacity: 0, x: -10, scale: 0.9 }}
-          animate={{ opacity: 1, x: 0, scale: 1 }}
-          exit={{ opacity: 0, x: -10, scale: 0.9 }}
-          transition={{ duration: 0.2, ease: "easeOut" }}
-          className={css({
-            position: "absolute",
-            left: "calc(100% + 8px)",
-            top: "50%",
-            transform: "translateY(-50%)",
-            bg: isDark ? "gray.700" : "gray.800",
-            color: "white",
-            px: "8px",
-            py: "4px",
-            borderRadius: "4px",
-            fontSize: "sm",
-            fontWeight: "medium",
-            whiteSpace: "nowrap",
-            zIndex: 1000,
-            _before: {
-              content: '""',
-              position: "absolute",
-              right: "100%",
-              top: "50%",
-              transform: "translateY(-50%)",
-              borderWidth: "4px",
-              borderStyle: "solid",
-              borderColor: isDark ? "transparent token(colors.gray.700) transparent transparent" : "transparent token(colors.gray.800) transparent transparent",
-            },
-          })}
-        >
-          {text}
-        </MotionBox>
-      )}
-    </AnimatePresence>
-  </Box>
-);
 
 const SideBar = () => {
   const [isExpanded, setIsExpanded] = useState(true);
@@ -231,54 +126,7 @@ const SideBar = () => {
   if (isMobile) {
     return (
       <>
-        <MotionBox
-          initial={{ y: -60 }}
-          animate={{ y: 0 }}
-          className={css({
-            position: "fixed",
-            top: 0,
-            left: 0,
-            right: 0,
-            bg: isDark ? "gray.800" : "white",
-            zIndex: 1000,
-            borderBottom: "1px solid",
-            borderColor: isDark ? "gray.700" : "gray.200",
-            px: "16px",
-            py: "12px",
-            height: "60px",
-          })}
-        >
-          <Flex justify="space-between" align="center" height="100%">
-            <Box>
-              <img 
-                src="/logo.png" 
-                alt="Logo" 
-                className={css({ 
-                  height: "32px",
-                  width: "auto",
-                  filter: isDark ? "brightness(0) invert(1)" : "none",
-                })} 
-              />
-            </Box>
-            <Flex align="center" gap={2}>
-              <CreativeThemeToggle />
-              <IconButton
-                aria-label="toggle menu"
-                onClick={toggleSidebar}
-                variant="ghost"
-                size="sm"
-                className={css({
-                  color: isDark ? "white" : "black",
-                  _hover: {
-                    bg: isDark ? "gray.700" : "gray.100",
-                  }
-                })}
-              >
-                <HamburgerIcon />
-              </IconButton>
-            </Flex>
-          </Flex>
-        </MotionBox>
+        <MobileHeader isDark={isDark} onMenuToggle={toggleSidebar} />
 
         <AnimatePresence>
           {mobileMenuOpen && (
@@ -287,15 +135,13 @@ const SideBar = () => {
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
-                className={css({
-                  position: "fixed",
-                  top: 0,
-                  left: 0,
-                  right: 0,
-                  bottom: 0,
-                  bg: "blackAlpha.600",
-                  zIndex: 1998,
-                })}
+                position="fixed"
+                top={0}
+                left={0}
+                right={0}
+                bottom={0}
+                bg="blackAlpha.600"
+                zIndex={1998}
                 onClick={() => setMobileMenuOpen(false)}
               />
               
@@ -304,29 +150,25 @@ const SideBar = () => {
                 animate={{ x: 0 }}
                 exit={{ x: "-100%" }}
                 transition={{ type: "spring", stiffness: 300, damping: 30 }}
-                className={css({
-                  position: "fixed",
-                  top: 0,
-                  left: 0,
-                  bottom: 0,
-                  right: 0,
-                  bg: isDark ? "gray.800" : "white",
-                  zIndex: 1999,
-                  display: "flex",
-                  flexDirection: "column",
-                })}
+                position="fixed"
+                top={0}
+                left={0}
+                bottom={0}
+                right={0}
+                bg={isDark ? 'gray.800' : 'white'}
+                zIndex={1999}
+                display="flex"
+                flexDirection="column"
               >
                 <Box
-                  className={css({
-                    px: "16px",
-                    py: "12px",
-                    borderBottom: "1px solid",
-                    borderColor: isDark ? "gray.700" : "gray.200",
-                    height: "60px",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "space-between",
-                  })}
+                  px="16px"
+                  py="12px"
+                  borderBottom="1px solid"
+                  borderColor={isDark ? 'gray.700' : 'gray.200'}
+                  height="60px"
+                  display="flex"
+                  alignItems="center"
+                  justifyContent="space-between"
                 >
                   <img 
                     src="/logo.png" 
@@ -342,33 +184,27 @@ const SideBar = () => {
                     onClick={() => setMobileMenuOpen(false)}
                     variant="ghost"
                     size="sm"
-                    className={css({
-                      color: isDark ? "white" : "black",
-                      _hover: {
-                        bg: isDark ? "gray.700" : "gray.100",
-                      }
-                    })}
+                    color={isDark ? 'white' : 'black'}
+                    _hover={{
+                      bg: isDark ? 'gray.700' : 'gray.100',
+                    }}
                   >
                     <CloseIcon />
                   </IconButton>
                 </Box>
 
                 <Box
-                  className={css({
-                    flex: 1,
-                    px: "16px",
-                    py: "24px",
-                    display: "flex",
-                    flexDirection: "column",
-                    justifyContent: "space-between",
-                  })}
+                  flex={1}
+                  px="16px"
+                  py="24px"
+                  display="flex"
+                  flexDirection="column"
+                  justifyContent="space-between"
                 >
                   <Box
-                    className={css({
-                      display: "flex",
-                      flexDirection: "column",
-                      gap: "8px",
-                    })}
+                    display="flex"
+                    flexDirection="column"
+                    gap="8px"
                   >
                     {menuItems.map((item) => (
                       <MenuItem key={item.text} item={item} />
@@ -377,15 +213,13 @@ const SideBar = () => {
 
                   <Box>
                     <Box
-                      className={css({
-                        display: "flex",
-                        flexDirection: "column",
-                        gap: "8px",
-                        mb: "24px",
-                        pt: "16px",
-                        borderTop: "1px solid",
-                        borderColor: isDark ? "gray.700" : "gray.200",
-                      })}
+                      display="flex"
+                      flexDirection="column"
+                      gap="8px"
+                      mb="24px"
+                      pt="16px"
+                      borderTop="1px solid"
+                      borderColor={isDark ? 'gray.700' : 'gray.200'}
                     >
                       {lastmenuItems.map((item) => (
                         <MenuItem key={item.text} item={item} isLast />
@@ -393,14 +227,12 @@ const SideBar = () => {
                     </Box>
 
                     <Box
-                      className={css({
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "space-between",
-                        pt: "16px",
-                        borderTop: "1px solid",
-                        borderColor: isDark ? "gray.700" : "gray.200",
-                      })}
+                      display="flex"
+                      alignItems="center"
+                      justifyContent="space-between"
+                      pt="16px"
+                      borderTop="1px solid"
+                      borderColor={isDark ? 'gray.700' : 'gray.200'}
                     >
                       <Flex gap={3} alignItems="center" flex={1}>
                         <img 
@@ -433,16 +265,14 @@ const SideBar = () => {
                         aria-label="logout"
                         variant="ghost"
                         size="sm"
-                        className={css({
-                          minWidth: "32px",
-                          width: "32px",
-                          height: "32px",
-                          color: isDark ? "white" : "black",
-                          _hover: {
-                            opacity: 0.8,
-                            bg: isDark ? "gray.700" : "gray.100",
-                          },
-                        })}
+                        minWidth="32px"
+                        width="32px"
+                        height="32px"
+                        color={isDark ? 'white' : 'black'}
+                        _hover={{
+                          opacity: 0.8,
+                          bg: isDark ? 'gray.700' : 'gray.100',
+                        }}
                       >
                         <img 
                           src="/assets/icons/sidebar-icons/logout-icon.svg" 
@@ -513,7 +343,7 @@ const SideBar = () => {
           alignItems: "center",
           height: "40px"
         })}>
-          <CreativeThemeToggle />
+          <ThemeToggle />
         </Box>
       )}
       
@@ -523,31 +353,29 @@ const SideBar = () => {
           justifyContent: "center",
           mb: "16px"
         })}>
-          <CreativeThemeToggle />
+          <ThemeToggle />
         </Box>
       )}
       
       <IconButton
         aria-label="toggle sidebar"
         onClick={toggleSidebar}
-        className={css({
-          position: "absolute",
-          right: "-16px",
-          top: "32px",
-          bg: "primary.100",
-          borderRadius: "50%",
-          width: "32px",
-          height: "32px",
-          minWidth: "32px",
-          minHeight: "32px",
-          padding: "0",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          _hover: {
-            bg: "primary.100",
-          },
-        })}
+        position="absolute"
+        right="-16px"
+        top="32px"
+        bg="#02983E"
+        borderRadius="50%"
+        width="32px"
+        height="32px"
+        minWidth="32px"
+        minHeight="32px"
+        padding="0"
+        display="flex"
+        alignItems="center"
+        justifyContent="center"
+        _hover={{
+          bg: "#02983E",
+        }}
       >
         <ChevronLeftIcon color="white" />
       </IconButton>
@@ -556,7 +384,6 @@ const SideBar = () => {
         flex={1} 
         justifyContent="space-between" 
         className={css({ height: '100%' })}
-        spacing={0}
       >
         <Box className={css({ 
           display: "flex", 
@@ -582,14 +409,12 @@ const SideBar = () => {
           </Box>
 
           <Box 
-            className={css({
-              display: "flex",
-              justifyContent: isExpanded ? "space-between" : "center",
-              alignItems: "center",
-              pt: "16px",
-              borderTopWidth: "1px",
-              borderTopColor: isDark ? "gray.700" : "gray.200",
-            })}
+            display="flex"
+            justifyContent={isExpanded ? "space-between" : "center"}
+            alignItems="center"
+            pt="16px"
+            borderTop="1px solid"
+            borderColor={isDark ? 'gray.700' : 'gray.200'}
           >
             <Flex gap={2} alignItems="center" flex={1} justify={isExpanded ? "flex-start" : "center"}>
               <img 
@@ -625,16 +450,14 @@ const SideBar = () => {
                 aria-label="logout"
                 variant="ghost"
                 size="sm"
-                className={css({
-                  minWidth: "24px",
-                  width: "24px",
-                  height: "24px",
-                  color: isDark ? "white" : "black",
-                  _hover: {
-                    opacity: 0.8,
-                    bg: isDark ? "gray.700" : "gray.100",
-                  },
-                })}
+                minWidth="24px"
+                width="24px"
+                height="24px"
+                color={isDark ? 'white' : 'black'}
+                _hover={{
+                  opacity: 0.8,
+                  bg: isDark ? 'gray.700' : 'gray.100',
+                }}
               >
                 <img 
                   src="/assets/icons/sidebar-icons/logout-icon.svg" 

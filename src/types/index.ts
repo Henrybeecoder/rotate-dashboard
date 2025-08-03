@@ -7,6 +7,7 @@ export interface ListItem {
 
 export interface ExtraListProps {
   extraListData: ListItem[];
+  isDark: boolean;
 }
 
 export interface ExtraListItem {

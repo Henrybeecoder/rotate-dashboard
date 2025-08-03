@@ -1,17 +1,11 @@
-
 import React from 'react';
 import { Box, Text, Flex, Circle } from '@chakra-ui/react';
 import { motion } from 'framer-motion';
-
-import {css} from '../../../../styled-system/css'
-
-
+import { css } from '../../../../styled-system/css';
+import { MotionBox, MotionCircle, MotionFlex } from '@/utils';
 
 
-// Motion components
-const MotionBox = motion(Box);
-const MotionFlex = motion(Flex);
-const MotionCircle = motion(Circle);
+
 
 const riskData = [
   { 
@@ -61,55 +55,64 @@ const itemVariants = {
   }
 };
 
+// Single animation that runs once
 const circleVariants = {
-  hidden: { scale: 0, opacity: 0 },
+  hidden: { 
+    scale: 0, 
+    opacity: 0,
+    rotate: 0
+  },
   visible: {
     scale: 1,
     opacity: 1,
+    rotate: 360,
     transition: { 
       type: 'spring',
       stiffness: 200,
       damping: 20,
-      delay: 0.3
-    }
-  }
-};
-
-const pulseVariants = {
-  pulse: {
-    scale: [1, 1.05, 1],
-    transition: {
-      duration: 2,
-      repeat: Infinity,
-      ease: 'easeInOut'
+      delay: 0.3,
+      duration: 1.2
     }
   }
 };
 
 const totalRisks = riskData.reduce((sum, item) => sum + item.count, 0);
 
-export default function ContextualRiskGraph() {
+export default function ContextualRiskGraph({ isDark = false }) {
+  // Dynamic styles based on dark mode
+  const containerStyles = css({
+    bg: isDark ? 'gray.800' : 'white',
+    border: isDark ? '1.1px solid token(colors.gray.700)' : '1.1px solid token(colors.gray.200)',
+    boxShadow: isDark ? 'dark-dashboard-card' : 'dashboard-card',
+    borderRadius: '20px',
+    width: { base: '100%', lg: '47%' },
+    height: '100%',
+    transition: 'all 0.3s ease',
+  });
+
+  const titleColor = isDark ? 'gray.100' : 'secondary.500';
+  const textColor = isDark ? 'gray.200' : 'secondary.800';
+  const circleTextColor = isDark ? 'gray.100' : 'neutral.500';
+  const circleBorderColor = totalRisks > 0 ? '#C6190D' : (isDark ? '#4A5568' : '#E2E8F0');
+
   return (
     <MotionBox
-      className={css({
-        bg: 'white',
-        border: '1.1px solid token(colors.gray.200)',
-        boxShadow: 'dashboard-card',
-        borderRadius: 'lg',
-        p: 6,
-        width: '100%'
-      })}
+      p={6}
+      className={containerStyles}
+      direction={{ base: '100%', lg: '47%' }}
       variants={containerVariants}
       initial="hidden"
       animate="visible"
       whileHover={{ 
-        boxShadow: '0px 4px 12px 0px rgba(0,0,0,0.1)',
+        boxShadow: isDark 
+          ? '0px 4px 12px 0px rgba(0,0,0,0.3)' 
+          : '0px 4px 12px 0px rgba(0,0,0,0.1)',
         transition: { duration: 0.2 }
       }}
     >
       <Text
         className={css({
-          color: 'secondary.500',
+          color: titleColor,
           fontSize: 'lg',
           fontWeight: 'medium',
           lineHeight: '28px',
@@ -144,13 +147,11 @@ export default function ContextualRiskGraph() {
                 bg={risk.color}
                 variants={circleVariants}
                 whileHover={{ scale: 1.2 }}
-                animate={risk.count > 0 ? 'pulse' : 'visible'}
-                variants={risk.count > 0 ? pulseVariants : circleVariants}
               />
               
               <Text
                 className={css({
-                  color: 'secondary.800',
+                  color: textColor,
                   fontSize: 'md',
                   fontWeight: 'bold',
                   minW: '20px'
@@ -161,7 +162,7 @@ export default function ContextualRiskGraph() {
               
               <Text
                 className={css({
-                  color: 'secondary.800',
+                  color: textColor,
                   fontSize: 'md',
                   fontWeight: 'normal'
                 })}
@@ -172,7 +173,7 @@ export default function ContextualRiskGraph() {
           ))}
         </MotionBox>
 
-        {/* Central Risk Circle */}
+        {/* Central Risk Circle - Single Animation */}
         <MotionBox
           position="relative"
           display="flex"
@@ -181,8 +182,8 @@ export default function ContextualRiskGraph() {
         >
           <MotionCircle
             size="120px"
-            border="3px solid"
-            borderColor="#C6190D"
+            border="7px solid"
+            borderColor={circleBorderColor}
             bg="transparent"
             display="flex"
             alignItems="center"
@@ -190,17 +191,9 @@ export default function ContextualRiskGraph() {
             variants={circleVariants}
             whileHover={{ 
               scale: 1.05,
-              borderColor: '#E5372B',
+              borderColor: totalRisks > 0 ? '#E5372B' : (isDark ? '#718096' : '#CBD5E0'),
               transition: { duration: 0.3 }
             }}
-            animate={totalRisks > 0 ? {
-              borderColor: ['#C6190D', '#E5372B', '#C6190D'],
-              transition: {
-                duration: 3,
-                repeat: Infinity,
-                ease: 'easeInOut'
-              }
-            } : {}}
           >
             <motion.div
               initial={{ scale: 0, opacity: 0 }}
@@ -209,7 +202,7 @@ export default function ContextualRiskGraph() {
             >
               <Text
                 className={css({
-                  color: 'neutral.500',
+                  color: circleTextColor,
                   fontSize: '35px',
                   fontWeight: 'semibold',
                   lineHeight: '1'
@@ -219,29 +212,6 @@ export default function ContextualRiskGraph() {
               </Text>
             </motion.div>
           </MotionCircle>
-
-          {/* Animated Ring Effect for Active Risks */}
-          {totalRisks > 0 && (
-            <motion.div
-              style={{
-                position: 'absolute',
-                width: '140px',
-                height: '140px',
-                border: '2px solid #C6190D',
-                borderRadius: '50%',
-                opacity: 0.3
-              }}
-              animate={{
-                scale: [1, 1.2, 1],
-                opacity: [0.3, 0.1, 0.3]
-              }}
-              transition={{
-                duration: 2,
-                repeat: Infinity,
-                ease: 'easeInOut'
-              }}
-            />
-          )}
         </MotionBox>
       </Flex>
     </MotionBox>

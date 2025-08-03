@@ -16,11 +16,13 @@ interface AssetData {
 interface AssetTableProps {
   data: AssetData[];
   itemsPerPage?: number;
+  isDark: boolean;
 }
 
 export const AssetTable: React.FC<AssetTableProps> = ({
   data,
-  itemsPerPage = 10
+  itemsPerPage = 10,
+  isDark
 }) => {
   const [currentPage, setCurrentPage] = useState(1);
 
@@ -40,46 +42,105 @@ export const AssetTable: React.FC<AssetTableProps> = ({
     itemsPerPage
   };
 
+  // Dynamic styles based on dark mode
+  const containerStyles = css({
+    width: '50%',
+    transition: 'all 0.3s ease',
+  });
+
   const nameStyles = css({
-    color: '#525D73',
+    color: isDark ? '#E2E8F0' : '#525D73',
     fontSize: '13px',
     fontWeight: '600',
-    lineHeight: '13.5px'
+    lineHeight: '13.5px',
+    transition: 'color 0.3s ease',
   });
 
   const ipStyles = css({
-    color: '#667085',
+    color: isDark ? '#A0AEC0' : '#667085',
     fontSize: '9.45px',
     lineHeight: '10.13px',
     fontWeight: '500',
     marginTop: '10px',
+    transition: 'color 0.3s ease',
   });
 
-  const statusStyles = css({
-    color: 'error.100',
-    backgroundColor: 'error.50',
-    padding: '10px 30px',
-    borderRadius: 'lg',
-    fontSize: '15px',
-    fontWeight: '700',
-    display: 'inline-block',
-    textAlign: 'center',
-  });
+  // Status styles with different variants based on status type
+  const getStatusStyles = (status: string) => {
+    const baseStyles = {
+      padding: '10px 30px',
+      borderRadius: 'lg',
+      fontSize: '15px',
+      fontWeight: '700',
+      display: 'inline-block',
+      textAlign: 'center',
+      transition: 'all 0.3s ease',
+    };
+
+    // You can customize these based on different status types
+    switch (status.toLowerCase()) {
+      case 'critical':
+        return css({
+          ...baseStyles,
+          color: isDark ? '#FEB2B2' : '#C53030',
+          backgroundColor: isDark ? '#742A2A' : '#FED7D7',
+          border: isDark ? '1px solid #C53030' : 'none',
+        });
+      case 'high':
+        return css({
+          ...baseStyles,
+          color: isDark ? '#FBD38D' : '#D69E2E',
+          backgroundColor: isDark ? '#744210' : '#FEFCBF',
+          border: isDark ? '1px solid #D69E2E' : 'none',
+        });
+      case 'medium':
+        return css({
+          ...baseStyles,
+          color: isDark ? '#9AE6B4' : '#38A169',
+          backgroundColor: isDark ? '#22543D' : '#C6F6D5',
+          border: isDark ? '1px solid #38A169' : 'none',
+        });
+      case 'low':
+        return css({
+          ...baseStyles,
+          color: isDark ? '#90CDF4' : '#3182CE',
+          backgroundColor: isDark ? '#2A4365' : '#BEE3F8',
+          border: isDark ? '1px solid #3182CE' : 'none',
+        });
+      default:
+        return css({
+          ...baseStyles,
+          color: isDark ? '#FEB2B2' : '#C53030',
+          backgroundColor: isDark ? '#742A2A' : '#FED7D7',
+          border: isDark ? '1px solid #C53030' : 'none',
+        });
+    }
+  };
 
   const renderCell = (key: string, value: any, row: TableData) => {
     if (key === 'asset') {
       return (
         <Flex align="center" gap="12px">
-          <Image
-            src={row.image}
-            alt="Asset icon"
-            width="32px"
-            height="32px"
-            flexShrink={0}
-          />
+          <Box
+            position="relative"
+            // borderRadius="6px"
+            // overflow="hidden"
+            // bg={isDark ? 'gray.700' : 'gray.100'}
+            // transition="background-color 0.3s ease"
+          >
+            <Image
+              src={row.image}
+              alt="Asset icon"
+              width="40px"
+              height="40px"
+              // flexShrink={0}
+              // filter={isDark ? 'brightness(1.1) contrast(1.1)' : 'none'}
+              // transition="filter 0.3s ease"
+            />
+          </Box>
           <Box>
             <Text className={nameStyles}>{row.name}</Text>
-            <Text className={ipStyles} mt={4}>{row.ip}</Text>
+            <Text className={ipStyles} mt={2}>{row.ip}</Text>
           </Box>
         </Flex>
       );
@@ -87,7 +148,7 @@ export const AssetTable: React.FC<AssetTableProps> = ({
 
     if (key === 'status') {
       return (
-        <Box className={statusStyles}>
+        <Box className={getStatusStyles(row.status)} width={20}>
           {row.status}
         </Box>
       );
@@ -101,12 +162,15 @@ export const AssetTable: React.FC<AssetTableProps> = ({
   };
 
   return (
-    <SharedTable
-      columns={columns}
-      data={paginatedData}
-      pagination={pagination}
-      onPageChange={handlePageChange}
-      renderCell={renderCell}
-    />
+    <Box className={containerStyles}>
+      <SharedTable
+        columns={columns}
+        data={paginatedData}
+        pagination={pagination}
+        onPageChange={handlePageChange}
+        renderCell={renderCell}
+        isDark={isDark} // Pass isDark to SharedTable if it supports dark mode
+      />
+    </Box>
   );
 };

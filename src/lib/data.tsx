@@ -42,3 +42,21 @@ export const extraListData = [
         completed: false,
     },
 ];
+
+
+ export const assetTableData = [
+    {
+      id: '1',
+      name: 'Loremipsumdolorsit',
+      ip: '192.168.1.1',
+      status: 'Critical',
+      image: '/assets/images/table/asset-server.svg'
+    },
+    {
+      id: '2',
+      name: 'Loremipsumdolorsit',
+      ip: '192.168.1.2',
+      status: 'Critical',
+      image: '/assets/images/table/asset-server.svg'
+    }
+  ];
