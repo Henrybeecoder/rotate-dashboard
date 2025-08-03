@@ -1,7 +1,8 @@
 'use client';
+
 import { Box, Text, Flex } from '@chakra-ui/react';
 import { css } from "../../../../../styled-system/css";
-import { CheckIcon } from '@chakra-ui/icons';
+import { FaCheck } from 'react-icons/fa';
 import type { ExtraListProps } from '@/types';
 
 export default function ExtraList({ extraListData }: ExtraListProps) {
@@ -28,23 +29,23 @@ export default function ExtraList({ extraListData }: ExtraListProps) {
             >
               {item.title}
             </Text>
-            
+
             <Text
               fontSize="15px"
               fontWeight="medium"
               color="secondary.500"
               width="120px"
               textAlign="left"
+              display="flex"
+              alignItems="center"
+              gap="6px"
             >
-                {item.completed && (
-              <CheckIcon
-              color='#02983E' 
-                
-                flexShrink={0}
-                width="15px"
-                mr={2}
-              />
-            )}
+              {item.completed && (
+                <FaCheck
+                  color="#02983E"
+                  style={{ width: '15px', flexShrink: 0 }}
+                />
+              )}
               {item.paragraph}
             </Text>
           </Flex>

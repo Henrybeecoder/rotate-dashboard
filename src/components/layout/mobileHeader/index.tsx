@@ -1,6 +1,6 @@
 import { motion } from 'framer-motion';
 import { Box, Flex, IconButton } from '@chakra-ui/react';
-import { HamburgerIcon } from '@chakra-ui/icons';
+import { FaBars } from 'react-icons/fa';
 import { css } from '../../../../styled-system/css';
 import { ThemeToggle } from '@/components/theme/themeToggle';
 import { MotionBox } from '@/utils';
@@ -55,7 +55,7 @@ export const MobileHeader = ({
               bg: isDark ? 'gray.700' : 'gray.100',
             }}
           >
-            <HamburgerIcon />
+            <FaBars />
           </IconButton>
         </Flex>
       </Flex>

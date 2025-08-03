@@ -1,6 +1,6 @@
 import React from 'react';
 import { Box, Text, Flex, IconButton } from '@chakra-ui/react';
-import { ChevronLeftIcon, ChevronRightIcon } from '@chakra-ui/icons';
+import { FaChevronLeft, FaChevronRight } from 'react-icons/fa';
 import { PaginationInfo } from '@/types';
 
 interface PaginationProps {
@@ -65,7 +65,7 @@ export const Pagination: React.FC<PaginationProps> = ({
           }}
           transition="all 0.2s ease"
         >
-          <ChevronLeftIcon />
+          <FaChevronLeft />
           </IconButton>
 
         <Text
@@ -95,7 +95,7 @@ export const Pagination: React.FC<PaginationProps> = ({
           }}
           transition="all 0.2s ease"
         >
-          <ChevronRightIcon />
+          <FaChevronRight />
           </IconButton>
       </Flex>
     </Box>

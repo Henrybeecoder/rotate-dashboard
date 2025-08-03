@@ -1,11 +1,52 @@
 import React from 'react';
-import { Box, Text, Flex, Circle } from '@chakra-ui/react';
-import { motion } from 'framer-motion';
+import { Box, Text, Flex } from '@chakra-ui/react';
+import { motion, Variants, Transition } from 'framer-motion';
 import { css } from '../../../../styled-system/css';
-import { MotionBox, MotionCircle, MotionFlex } from '@/utils';
 
+// Define proper types for the variants
+const containerVariants: Variants = {
+  hidden: { opacity: 0, y: 20 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: {
+      duration: 0.6,
+      staggerChildren: 0.1
+    }
+  }
+};
 
+const itemVariants: Variants = {
+  hidden: { opacity: 0, x: -20 },
+  visible: {
+    opacity: 1,
+    x: 0,
+    transition: { duration: 0.4 }
+  }
+};
 
+// Define the spring transition type explicitly
+const springTransition: Transition = {
+  type: 'spring',
+  stiffness: 200,
+  damping: 20,
+  delay: 0.3,
+  duration: 1.2
+};
+
+const circleVariants: Variants = {
+  hidden: { 
+    scale: 0, 
+    opacity: 0,
+    rotate: 0
+  },
+  visible: {
+    scale: 1,
+    opacity: 1,
+    rotate: 360,
+    transition: springTransition
+  }
+};
 
 const riskData = [
   { 
@@ -34,52 +75,9 @@ const riskData = [
   }
 ];
 
-const containerVariants = {
-  hidden: { opacity: 0, y: 20 },
-  visible: {
-    opacity: 1,
-    y: 0,
-    transition: {
-      duration: 0.6,
-      staggerChildren: 0.1
-    }
-  }
-};
-
-const itemVariants = {
-  hidden: { opacity: 0, x: -20 },
-  visible: {
-    opacity: 1,
-    x: 0,
-    transition: { duration: 0.4 }
-  }
-};
-
-// Single animation that runs once
-const circleVariants = {
-  hidden: { 
-    scale: 0, 
-    opacity: 0,
-    rotate: 0
-  },
-  visible: {
-    scale: 1,
-    opacity: 1,
-    rotate: 360,
-    transition: { 
-      type: 'spring',
-      stiffness: 200,
-      damping: 20,
-      delay: 0.3,
-      duration: 1.2
-    }
-  }
-};
-
 const totalRisks = riskData.reduce((sum, item) => sum + item.count, 0);
 
 export default function ContextualRiskGraph({ isDark = false }) {
-  // Dynamic styles based on dark mode
   const containerStyles = css({
     bg: isDark ? 'gray.800' : 'white',
     border: isDark ? '1.1px solid token(colors.gray.700)' : '1.1px solid token(colors.gray.200)',
@@ -96,10 +94,8 @@ export default function ContextualRiskGraph({ isDark = false }) {
   const circleBorderColor = totalRisks > 0 ? '#C6190D' : (isDark ? '#4A5568' : '#E2E8F0');
 
   return (
-    <MotionBox
-      p={6}
+    <motion.div
       className={containerStyles}
-      direction={{ base: '100%', lg: '47%' }}
       variants={containerVariants}
       initial="hidden"
       animate="visible"
@@ -110,110 +106,118 @@ export default function ContextualRiskGraph({ isDark = false }) {
         transition: { duration: 0.2 }
       }}
     >
-      <Text
-        className={css({
-          color: titleColor,
-          fontSize: 'lg',
-          fontWeight: 'medium',
-          lineHeight: '28px',
-          mb: 4
-        })}
-      >
-        Contextual Risk
-      </Text>
-
-      <Flex
-        direction={{ base: 'column', lg: 'row' }}
-        align={{ base: 'stretch', lg: 'center' }}
-        justify="space-between"
-        gap={8}
-      >
-        {/* Risk Items List */}
-        <MotionBox flex={1}>
-          {riskData.map((risk, index) => (
-            <MotionFlex
-              key={risk.label}
-              align="center"
-              gap={3}
-              my={3}
-              variants={itemVariants}
-              whileHover={{ 
-                x: 5,
-                transition: { duration: 0.2 }
-              }}
-            >
-              <MotionCircle
-                size="8px"
-                bg={risk.color}
-                variants={circleVariants}
-                whileHover={{ scale: 1.2 }}
-              />
-              
-              <Text
-                className={css({
-                  color: textColor,
-                  fontSize: 'md',
-                  fontWeight: 'bold',
-                  minW: '20px'
-                })}
-              >
-                {risk.count}
-              </Text>
-              
-              <Text
-                className={css({
-                  color: textColor,
-                  fontSize: 'md',
-                  fontWeight: 'normal'
-                })}
-              >
-                {risk.label}
-              </Text>
-            </MotionFlex>
-          ))}
-        </MotionBox>
-
-        {/* Central Risk Circle - Single Animation */}
-        <MotionBox
-          position="relative"
-          display="flex"
-          alignItems="center"
-          justifyContent="center"
+      <Box p={6}>
+        <Text
+          className={css({
+            color: titleColor,
+            fontSize: 'lg',
+            fontWeight: 'medium',
+            lineHeight: '28px',
+            mb: 4
+          })}
         >
-          <MotionCircle
-            size="120px"
-            border="7px solid"
-            borderColor={circleBorderColor}
-            bg="transparent"
+          Contextual Risk
+        </Text>
+
+        <Flex
+          direction={{ base: 'column', lg: 'row' }}
+          align={{ base: 'stretch', lg: 'center' }}
+          justify="space-between"
+          gap={8}
+        >
+          {/* Risk Items List */}
+          <Box flex={1}>
+            {riskData.map((risk) => (
+              <motion.div
+                key={risk.label}
+                variants={itemVariants}
+                whileHover={{ 
+                  x: 5,
+                  transition: { duration: 0.2 }
+                }}
+              >
+                <Flex align="center" gap={3} my={3}>
+                  <motion.div
+                    variants={circleVariants}
+                    whileHover={{ scale: 1.2 }}
+                    style={{
+                      width: '8px',
+                      height: '8px',
+                      borderRadius: '50%',
+                      backgroundColor: risk.color
+                    }}
+                  />
+                  
+                  <Text
+                    className={css({
+                      color: textColor,
+                      fontSize: 'md',
+                      fontWeight: 'bold',
+                      minW: '20px'
+                    })}
+                  >
+                    {risk.count}
+                  </Text>
+                  
+                  <Text
+                    className={css({
+                      color: textColor,
+                      fontSize: 'md',
+                      fontWeight: 'normal'
+                    })}
+                  >
+                    {risk.label}
+                  </Text>
+                </Flex>
+              </motion.div>
+            ))}
+          </Box>
+
+          {/* Central Risk Circle */}
+          <Box
+            position="relative"
             display="flex"
             alignItems="center"
             justifyContent="center"
-            variants={circleVariants}
-            whileHover={{ 
-              scale: 1.05,
-              borderColor: totalRisks > 0 ? '#E5372B' : (isDark ? '#718096' : '#CBD5E0'),
-              transition: { duration: 0.3 }
-            }}
           >
             <motion.div
-              initial={{ scale: 0, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              transition={{ delay: 0.8, duration: 0.5 }}
+              variants={circleVariants}
+              whileHover={{ 
+                scale: 1.05,
+                borderColor: totalRisks > 0 ? '#E5372B' : (isDark ? '#718096' : '#CBD5E0'),
+                transition: { duration: 0.3 }
+              }}
+              style={{
+                width: '120px',
+                height: '120px',
+                borderRadius: '50%',
+                border: '7px solid',
+                borderColor: circleBorderColor,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center'
+              }}
             >
-              <Text
-                className={css({
-                  color: circleTextColor,
-                  fontSize: '35px',
-                  fontWeight: 'semibold',
-                  lineHeight: '1'
-                })}
+              <motion.div
+                initial={{ scale: 0, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                transition={{ delay: 0.8, duration: 0.5 }}
               >
-                {totalRisks}
-              </Text>
+                <Text
+                  className={css({
+                    color: circleTextColor,
+                    fontSize: '35px',
+                    fontWeight: 'semibold',
+                    lineHeight: '1'
+                  })}
+                >
+                  {totalRisks}
+                </Text>
+              </motion.div>
             </motion.div>
-          </MotionCircle>
-        </MotionBox>
-      </Flex>
-    </MotionBox>
+          </Box>
+        </Flex>
+      </Box>
+    </motion.div>
   );
 }

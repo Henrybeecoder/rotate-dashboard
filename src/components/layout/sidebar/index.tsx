@@ -1,7 +1,7 @@
 'use client';
 import { css } from "../../../../styled-system/css";
 import { useState, useEffect } from "react";
-import { ChevronLeftIcon, CloseIcon } from "@chakra-ui/icons";
+import { FaChevronLeft, FaTimes } from "react-icons/fa";
 import { IconButton, Box, Text, Flex, VStack, useBreakpointValue } from "@chakra-ui/react";
 import Link from "next/link";
 import { useTheme } from '@/contexts/themeContext';
@@ -189,7 +189,7 @@ const SideBar = () => {
                       bg: isDark ? 'gray.700' : 'gray.100',
                     }}
                   >
-                    <CloseIcon />
+                    <FaTimes/>
                   </IconButton>
                 </Box>
 
@@ -377,7 +377,7 @@ const SideBar = () => {
           bg: "#02983E",
         }}
       >
-        <ChevronLeftIcon color="white" />
+        <FaChevronLeft color="white" />
       </IconButton>
 
       <VStack 

@@ -65,7 +65,7 @@ export default function DescriptionSection({extraListData, isDark} : ExtraListPr
         <Box className={sectionSpacing}>
           <ExtraList 
             extraListData={extraListData} 
-       
+      isDark={isDark}
           />
         </Box>
         

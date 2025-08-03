@@ -1,7 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Box } from '@chakra-ui/react';
-import {css} from '../../../../styled-system/css';
-
+import { css } from '../../../../styled-system/css';
 
 interface HoverTooltipProps {
   children: React.ReactNode;
@@ -9,18 +8,28 @@ interface HoverTooltipProps {
   position?: 'top' | 'bottom' | 'left' | 'right';
   offset?: number;
   delay?: number;
-  maxWidth?: string;
+  width?: string;
+  height?: string;
   disabled?: boolean;
   className?: string;
+  contentClassName?: string;
+  manualPosition?: {
+    top?: string;
+    left?: string;
+    right?: string;
+    bottom?: string;
+  };
+  showArrow?: boolean;
 }
 
 export const HoverTooltip: React.FC<HoverTooltipProps> = ({
   children,
   content,
   position = 'top',
-  offset = 8,
+  offset = 4,
   delay = 200,
-  maxWidth = '300px',
+  width = 'auto',
+  height = 'auto',
   disabled = false,
   className,
   contentClassName,
@@ -31,10 +40,20 @@ export const HoverTooltip: React.FC<HoverTooltipProps> = ({
   const [tooltipStyle, setTooltipStyle] = useState<React.CSSProperties>({});
   const triggerRef = useRef<HTMLDivElement>(null);
   const tooltipRef = useRef<HTMLDivElement>(null);
-  const timeoutRef = useRef<NodeJS.Timeout>();
+  const timeoutRef = useRef<NodeJS.Timeout>(null);
 
   const calculatePosition = () => {
     if (!triggerRef.current || !tooltipRef.current) return;
+
+    if (manualPosition) {
+      // For manual positioning, use absolute positioning relative to the parent
+      setTooltipStyle({
+        position: 'absolute',
+        ...manualPosition,
+        zIndex: 9999,
+      });
+      return;
+    }
 
     const triggerRect = triggerRef.current.getBoundingClientRect();
     const tooltipRect = tooltipRef.current.getBoundingClientRect();
@@ -98,8 +117,10 @@ export const HoverTooltip: React.FC<HoverTooltipProps> = ({
   useEffect(() => {
     if (isVisible) {
       calculatePosition();
-      window.addEventListener('scroll', calculatePosition);
-      window.addEventListener('resize', calculatePosition);
+      if (!manualPosition) {
+        window.addEventListener('scroll', calculatePosition);
+        window.addEventListener('resize', calculatePosition);
+      }
     }
 
     return () => {
@@ -118,10 +139,11 @@ export const HoverTooltip: React.FC<HoverTooltipProps> = ({
 
   const tooltipClasses = css({
     backgroundColor: '#FAFAFA',
-    borderRadius: 'md',
+    borderRadius: '20px',
     padding: '12px',
-    maxWidth: maxWidth,
-    boxShadow: '0px 2px 2px 2px #00000029',
+    width: width,
+    height: height,
+    boxShadow: '0px 2px 15pt 2px 15pt #00000029',
     fontSize: 'sm',
     color: 'secondary.800',
     opacity: isVisible ? 1 : 0,
@@ -162,7 +184,7 @@ export const HoverTooltip: React.FC<HoverTooltipProps> = ({
   });
 
   return (
-    <>
+    <Box position="relative" display="inline-block">
       <Box
         ref={triggerRef}
         onMouseEnter={handleMouseEnter}
@@ -185,99 +207,6 @@ export const HoverTooltip: React.FC<HoverTooltipProps> = ({
           </div>
         </div>
       )}
-    </>
-  );
-};
-
-
-export const HoverTooltipExample: React.FC = () => {
-  return (
-    <div className={css({ padding: '40px', display: 'flex', gap: '20px', flexWrap: 'wrap' })}>
-      <HoverTooltip
-        content={
-          <div>
-            <h4 className={css({ fontWeight: 'semibold', marginBottom: '8px' })}>
-              Product Information
-            </h4>
-            <p className={css({ fontSize: 'sm', color: 'secondary.500' })}>
-              This is a detailed description that appears when you hover over the image.
-              It can contain multiple lines of text and rich content.
-            </p>
-          </div>
-        }
-        position="top"
-      >
-        <img
-          src="https://via.placeholder.com/150x150/02983E/white?text=Hover+Me"
-          alt="Hover example"
-          className={css({
-            borderRadius: 'md',
-            cursor: 'pointer',
-            transition: 'transform 0.2s ease',
-            _hover: { transform: 'scale(1.05)' }
-          })}
-        />
-      </HoverTooltip>
-
-      <HoverTooltip
-        content="Simple tooltip content"
-        position="bottom"
-      >
-        <div className={css({
-          width: '120px',
-          height: '80px',
-          backgroundColor: 'primary.50',
-          border: '2px solid',
-          borderColor: 'primary.100',
-          borderRadius: 'lg',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          cursor: 'pointer',
-          fontSize: 'sm',
-          fontWeight: 'medium',
-          color: 'primary.100'
-        })}>
-          Hover Card
-        </div>
-      </HoverTooltip>
-
-      <HoverTooltip
-        content={
-          <div>
-            <div className={css({ display: 'flex', alignItems: 'center', marginBottom: '8px' })}>
-              <div className={css({
-                width: '12px',
-                height: '12px',
-                backgroundColor: 'success.100',
-                borderRadius: 'full',
-                marginRight: '8px'
-              })} />
-              <span className={css({ fontWeight: 'semibold', fontSize: 'sm' })}>Active Status</span>
-            </div>
-            <p className={css({ fontSize: 'xs', color: 'secondary.500' })}>
-              Last seen: 2 minutes ago
-            </p>
-          </div>
-        }
-        position="right"
-        delay={100}
-      >
-        <div className={css({
-          width: '40px',
-          height: '40px',
-          backgroundColor: 'blue.100',
-          borderRadius: 'full',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          color: 'white',
-          fontWeight: 'bold',
-          cursor: 'pointer'
-        })}>
-          JD
-        </div>
-      </HoverTooltip>
-    </div>
+    </Box>
   );
 };
