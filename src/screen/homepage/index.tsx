@@ -81,14 +81,7 @@ export default function HomePage({ contentAreaStyles, isDark }: HomePageProps) {
   });
 
   const isLoading = isLoadingExtra || isLoadingAssets;
-  const isError = isErrorExtra || isErrorAssets;
-  const error = errorExtra || errorAssets;
-
-  const handleRetry = () => {
-    if (isErrorExtra) refetchExtra();
-    if (isErrorAssets) refetchAssets();
-  };
-
+  
   if (isLoading) {
     return (
       <Box className={`${contentAreaStyles} ${darkModeStyles}`}>
@@ -97,62 +90,6 @@ export default function HomePage({ contentAreaStyles, isDark }: HomePageProps) {
     );
   }
 
-  if (isError) {
-    return (
-      <Box className={`${contentAreaStyles} ${darkModeStyles}`}>
-        <Flex
-          direction="column"
-          align="center"
-          justify="center"
-          height="50vh"
-          className={css({
-            backgroundColor: isDark ? 'red.900' : 'red.50',
-            borderRadius: '12px',
-            padding: '24px',
-            border: `1px solid ${isDark ? '#DC2626' : '#FCA5A5'}`,
-          })}
-        >
-          <Box
-            className={css({
-              fontSize: 'xl',
-              fontWeight: 'bold',
-              color: isDark ? 'red.300' : 'red.600',
-              mb: '16px',
-            })}
-          >
-            Error Loading Data
-          </Box>
-          <Box
-            className={css({
-              color: isDark ? 'red.200' : 'red.500',
-              mb: '24px',
-              textAlign: 'center',
-            })}
-          >
-            {error?.message || 'Something went wrong'}
-          </Box>
-          <button
-            onClick={handleRetry}
-            className={css({
-              backgroundColor: isDark ? 'red.600' : 'red.500',
-              color: 'white',
-              padding: '12px 24px',
-              borderRadius: '8px',
-              border: 'none',
-              cursor: 'pointer',
-              fontWeight: 'medium',
-              transition: 'background-color 0.2s ease',
-              _hover: {
-                backgroundColor: isDark ? 'red.700' : 'red.600',
-              },
-            })}
-          >
-            Try Again
-          </button>
-        </Flex>
-      </Box>
-    );
-  }
 
   return (
     <Box className={`${contentAreaStyles} ${darkModeStyles}`}>
