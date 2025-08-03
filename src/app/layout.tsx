@@ -1,14 +1,22 @@
 import type { Metadata } from 'next'
-import { Public_Sans } from 'next/font/google'
+import { Public_Sans, IBM_Plex_Mono } from 'next/font/google'
 import './globals.css'
-
 import { Providers } from './providers'
 import { ThemeProvider } from '@/contexts/themeContext'
 
+// Public Sans font configuration
 const publicSans = Public_Sans({ 
   subsets: ['latin'],
   weight: ['100', '200', '300', '400', '500', '600', '700', '800', '900'],
   variable: '--font-public-sans',
+  display: 'swap',
+})
+
+// IBM Plex Mono font configuration
+const ibmPlexMono = IBM_Plex_Mono({
+  subsets: ['latin'],
+  weight: ['100', '200', '300', '400', '500', '600', '700'],
+  variable: '--font-ibm-plex-mono',
   display: 'swap',
 })
 
@@ -24,12 +32,10 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={`${publicSans.variable} ${publicSans.className}`}>
+      <body className={`${publicSans.variable} ${ibmPlexMono.variable} ${publicSans.className}`}>
         <Providers>
-      
           {children}
-     
-          </Providers>
+        </Providers>
       </body>
     </html>
   )

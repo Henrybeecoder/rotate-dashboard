@@ -46,7 +46,7 @@ export default function Dropdown({ data, isDark = false }: DropdownProps) {
             fontSize="15px"
             fontWeight="700"
             lineHeight="22px"
-            color={isDark ? 'gray.100' : 'gray.900'}
+            color={isDark ? 'gray.100' : '#030229'}
           >
             {item.title}
           </Text>

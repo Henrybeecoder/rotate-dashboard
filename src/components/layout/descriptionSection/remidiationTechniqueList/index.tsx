@@ -43,8 +43,9 @@ export default function RemediationTechnique({ isDark = false }: RemediationTech
         fontSize="15px"
         fontWeight="700"
         mb="10px"
+        mt='8px'
         lineHeight={'22px'}
-        color={isDark ? 'gray.100' : 'gray.800'}
+        color={isDark ? 'gray.100' : '#334155'}
       >
        Lorem ipsum dolor sit
       </Text>

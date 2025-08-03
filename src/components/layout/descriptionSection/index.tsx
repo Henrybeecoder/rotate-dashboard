@@ -6,7 +6,7 @@ import type { ExtraListProps } from '@/types';
 import RemediationTechnique from './remidiationTechniqueList';
 
 export default function DescriptionSection({extraListData, isDark} : ExtraListProps) {
-  // Dynamic styles based on dark mode
+
   const containerStyles = css({
     shadow: isDark ? "dark-description-card" : "description-card",
     background: isDark ? "gray.800" : "white",
@@ -24,7 +24,7 @@ export default function DescriptionSection({extraListData, isDark} : ExtraListPr
     overflowX: "hidden",
     scrollBehavior: "smooth",
     
-    // Custom scrollbar styles for dark mode
+ 
     "&::-webkit-scrollbar": {
       width: "6px",
       display: "none",
@@ -32,7 +32,7 @@ export default function DescriptionSection({extraListData, isDark} : ExtraListPr
    
   });
 
-  // Spacing and layout styles
+
   const sectionSpacing = css({
     marginTop: "24px",
   });
@@ -45,14 +45,14 @@ export default function DescriptionSection({extraListData, isDark} : ExtraListPr
       height='100vh'
     >
       <Box className={scrollAreaStyles}>
-        {/* Main Description Section */}
+     
         <TextBox 
           header={'Description'}
           content={'Lorem ipsum dolor sit amet consectetur. Aenean sodales pellentesque gravida nibh et magna faucibus. Dui commodo ut metus amet egestas habitant viverra. Quisque fusce senectus facilisis non diam leo nulla sem pellentesque. Sit in vel sed cursus metus sit fringilla vestibulum.'}
        
         />
         
-        {/* Extra Section */}
+   
         <Box mt={'30px'} >
           <TextBox 
             header={'Extra'}
@@ -61,7 +61,7 @@ export default function DescriptionSection({extraListData, isDark} : ExtraListPr
           />
         </Box>
         
-        {/* Extra List Section */}
+     
         <Box className={sectionSpacing}>
           <ExtraList 
             extraListData={extraListData} 
@@ -69,7 +69,7 @@ export default function DescriptionSection({extraListData, isDark} : ExtraListPr
           />
         </Box>
         
-        {/* Additional content area - reserved for future use */}
+     
         <Box className={sectionSpacing}>
          <RemediationTechnique isDark={isDark}/>
         </Box>

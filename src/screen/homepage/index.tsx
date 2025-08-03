@@ -7,26 +7,8 @@ import Loader from '@/components/ui/loader';
 import DescriptionSection from "@/components/layout/descriptionSection";
 import DashboardSection from "@/components/layout/dashboardSection";
 import { extraListData, assetTableData } from '@/lib/data';
+import type { ListItem, AssetData, HomePageProps } from '@/types';
 
-interface ListItem {
-  id: string;
-  title: string;
-  paragraph: string;
-  completed: boolean;
-}
-
-interface AssetData {
-  id: string;
-  name: string;
-  ip: string;
-  status: string;
-  image: string;
-}
-
-interface HomePageProps {
-  contentAreaStyles: string;
-  isDark: boolean;
-}
 
 const fetchExtraListData = async (): Promise<ListItem[]> => {
   const delay = Math.random() * 1500 + 1500;

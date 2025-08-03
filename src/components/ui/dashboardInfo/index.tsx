@@ -6,7 +6,6 @@ import type { DashboardInfoProps } from "@/types";
 import DashboardItem from "../dashboardItems";
 import SpecialTextBox from "../specialTextBox";
 
-
 const DashboardInfo = ({ isDark }: DashboardInfoProps) => {
   const statusItems = [
     { image: '/assets/images/dashboard-info/error-icon.svg', color: '#E5372B', text: 'Lorem' },
@@ -16,19 +15,45 @@ const DashboardInfo = ({ isDark }: DashboardInfoProps) => {
 
   return (
     <Box py={4} px={4} className={dashboardContainerStyle} bg={isDark ? 'gray.800' : 'gray.50'}>
-      <Flex align="center" gap={2} >
+      <Flex 
+        direction={{ base: 'column', lg: 'row' }}
+        align={{ base: 'center', lg: 'center' }}
+        gap={{ base: 6, lg: 2 }}
+      >
         <DashboardItem
           imageSrc="/assets/images/dashboard-info/profile.svg"
           altText="User profile"
           label="Lorem ipsum"
           tooltipContent={
-          <Box>
-            <SpecialTextBox status="error" content="Lorem Ipsum Dolor Sit" width="50%"/>
-            </Box>}
+            <Box 
+              bg="#FAFAFA"
+              boxShadow="0px 2px 15pt 2px 15pt #00000029"
+              p={4}
+              borderRadius="lg"
+            >
+              <SpecialTextBox status="error" content="Lorem Ipsum Dolor Sit" width="100%"/>
+              <Flex align="flex-end" gap={2} justify="flex-end" mt={2}>
+                <SpecialTextBox status="error" content="1.2.3.4" width="40%"/>
+                <SpecialTextBox status="error" content="1.2.3.4" width="40%"/>
+                <SpecialTextBox status="error" content="1.2.3.4" width="40%"/>
+              </Flex>
+              <Flex align="center" gap={2} justify="flex-end" mt={2}>
+                <SpecialTextBox status="error" content="1.2.3.4" width="80%"/>
+                <SpecialTextBox status="error" content="1.2.3.4" width="80%"/>
+                <SpecialTextBox status="error" content="1.2.3.4" width="80%"/>
+              </Flex>
+              <SpecialTextBox status="neutral" content="Lorem: 1.2.3.4" width="100%" mt={2}/>
+            </Box>
+          }
           tooltipPosition={{ top: '50px', left: '60px' }}
         />
         
-        <Image src="/assets/images/dashboard-info/arrow.svg" alt="arrow" />
+        <Image 
+          src="/assets/images/dashboard-info/arrow.svg" 
+          alt="arrow" 
+          transform={{ base: 'rotate(90deg)', lg: 'none' }}
+          mx={{ base: 'auto', lg: 0 }}
+        />
         
         <DashboardItem
           imageSrc="/assets/images/dashboard-info/server-icon.svg"
@@ -38,7 +63,12 @@ const DashboardInfo = ({ isDark }: DashboardInfoProps) => {
           tooltipPosition={{ top: '50px', left: '60px' }}
         />
         
-        <Image src="/assets/images/dashboard-info/arrow.svg" alt="arrow" />
+        <Image 
+          src="/assets/images/dashboard-info/arrow.svg" 
+          alt="arrow" 
+          transform={{ base: 'rotate(90deg)', lg: 'none' }}
+          mx={{ base: 'auto', lg: 0 }}
+        />
         
         <DashboardItem
           imageSrc="/assets/images/dashboard-info/server-icon.svg"
@@ -48,9 +78,14 @@ const DashboardInfo = ({ isDark }: DashboardInfoProps) => {
           tooltipPosition={{ top: '50px', left: '60px' }}
         />
         
-        <Image src="/assets/images/dashboard-info/arrow-connect.svg" alt="connection" />
+        <Image 
+          src="/assets/images/dashboard-info/arrow-connect.svg" 
+          alt="connection" 
+          transform={{ base: 'rotate(90deg)', lg: 'none' }}
+          mx={{ base: 'auto', lg: 0 }}
+        />
         
-        <Flex direction="column" gap={5}>
+        <Flex  direction={{ base: 'row', lg: 'column' }}   gap={{ base: 10, lg: 5 }}>
           <DashboardItem
             imageSrc="/assets/images/dashboard-info/server-cancelled.svg"
             altText="Cancelled server"
@@ -70,7 +105,13 @@ const DashboardInfo = ({ isDark }: DashboardInfoProps) => {
         </Flex>
       </Flex>
 
-      <Flex direction={{ base: 'column', lg: 'row' }} gap={3} mt={4} py={2} borderTop={'1px solid #E0E2E7'}>
+      <Flex 
+        direction={{ base: 'column', lg: 'row' }} 
+        gap={3} 
+        mt={4} 
+        py={2} 
+        borderTop={'1px solid #E0E2E7'}
+      >
         {statusItems.map((item, index) => (
           <Flex key={index} align="center" gap={2}>
             <Image src={item.image} alt={`status-${index}`} />
@@ -89,9 +130,6 @@ const DashboardInfo = ({ isDark }: DashboardInfoProps) => {
   );
 };
 
-
-
-
 const dashboardContainerStyle = css({
   padding: '1rem',
   display: 'flex',
@@ -100,7 +138,5 @@ const dashboardContainerStyle = css({
   borderRadius: 'lg',
   transition: 'background-color 0.2s'
 });
-
-
 
 export default DashboardInfo;

@@ -13,7 +13,8 @@ export default function DashboardSection({isDark, assetTableData}: DashboardSect
     position: "relative",
     boxShadow: isDark ? "dark-dashboard-card" : "dashboard-card",
     bg: isDark ? "gray.800" : "white",
-    width: '65%',
+        width: { base: '100%', lg: '65%' },
+
     minH: 'full',
     borderRadius: "28px",
     p: 6,

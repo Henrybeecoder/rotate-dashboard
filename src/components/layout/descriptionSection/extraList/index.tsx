@@ -5,7 +5,7 @@ import { css } from "../../../../../styled-system/css";
 import { FaCheck } from 'react-icons/fa';
 import type { ExtraListProps } from '@/types';
 
-export default function ExtraList({ extraListData }: ExtraListProps) {
+export default function ExtraList({ extraListData, isDark }: ExtraListProps) {
   return (
     <Box mt={4} mb={2} py={4} borderTopWidth="1px" borderBottomWidth="1px" borderColor="gray.200">
       {extraListData.map((item) => (
@@ -24,7 +24,7 @@ export default function ExtraList({ extraListData }: ExtraListProps) {
               lineHeight="22px"
               fontWeight="bold"
               letterSpacing="1%"
-              color="secondary.800"
+              color="#334155"
               flex={1}
             >
               {item.title}
@@ -33,7 +33,7 @@ export default function ExtraList({ extraListData }: ExtraListProps) {
             <Text
               fontSize="15px"
               fontWeight="medium"
-              color="secondary.500"
+              color="#525D73"
               width="120px"
               textAlign="left"
               display="flex"

@@ -3,21 +3,10 @@ import { Box, Flex, Image, Text } from '@chakra-ui/react';
 import {css} from '../../../../styled-system/css';
 
 import { SharedTable } from '../table';
-import { TableColumn, TableData, PaginationInfo } from '@/types';
+import { TableColumn, TableData, PaginationInfo, AssetTableProps } from '@/types';
 
-interface AssetData {
-  id: string;
-  name: string;
-  ip: string;
-  status: string;
-  image: string;
-}
 
-interface AssetTableProps {
-  data: AssetData[];
-  itemsPerPage?: number;
-  isDark: boolean;
-}
+
 
 export const AssetTable: React.FC<AssetTableProps> = ({
   data,
@@ -42,7 +31,6 @@ export const AssetTable: React.FC<AssetTableProps> = ({
     itemsPerPage
   };
 
-  // Dynamic styles based on dark mode
   const containerStyles = css({
     width: '50%',
     transition: 'all 0.3s ease',
@@ -65,7 +53,7 @@ export const AssetTable: React.FC<AssetTableProps> = ({
     transition: 'color 0.3s ease',
   });
 
-  // Status styles with different variants based on status type
+  
   const getStatusStyles = (status: string) => {
     const baseStyles = {
       padding: '10px 30px',
@@ -77,7 +65,7 @@ export const AssetTable: React.FC<AssetTableProps> = ({
       transition: 'all 0.3s ease',
     };
 
-    // You can customize these based on different status types
+ 
     switch (status.toLowerCase()) {
       case 'critical':
         return css({
@@ -123,19 +111,14 @@ export const AssetTable: React.FC<AssetTableProps> = ({
         <Flex align="center" gap="12px">
           <Box
             position="relative"
-            // borderRadius="6px"
-            // overflow="hidden"
-            // bg={isDark ? 'gray.700' : 'gray.100'}
-            // transition="background-color 0.3s ease"
+          
           >
             <Image
               src={row.image}
               alt="Asset icon"
               width="40px"
               height="40px"
-              // flexShrink={0}
-              // filter={isDark ? 'brightness(1.1) contrast(1.1)' : 'none'}
-              // transition="filter 0.3s ease"
+            
             />
           </Box>
           <Box>

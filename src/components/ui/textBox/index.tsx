@@ -14,7 +14,7 @@ export default function TextBox({ header, content }: TextBoxProps) {
 
  
   const headerColor = actualTheme === 'dark' ? 'primary.50' : 'primary.100';
-  const contentColor = actualTheme === 'dark' ? 'secondary.500' : 'secondary.700';
+  const contentColor = actualTheme === 'dark' ? 'secondary.500' : '#525D73';
 
   return (
     <Box>
@@ -35,7 +35,7 @@ export default function TextBox({ header, content }: TextBoxProps) {
       mt={3}
         className={css({
           color: contentColor,
-          fontSize: "xs", // 0.75rem (12px)
+          fontSize: "xs", 
           fontWeight: "normal",
        
         })}

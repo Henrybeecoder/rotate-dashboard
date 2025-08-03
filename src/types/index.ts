@@ -69,3 +69,38 @@ export interface DashboardItemProps {
 export interface DashboardInfoProps {
   isDark: boolean;
 }
+
+export interface AssetData {
+  id: string;
+  name: string;
+  ip: string;
+  status: string;
+  image: string;
+}
+
+export interface AssetTableProps {
+  data: AssetData[];
+  itemsPerPage?: number;
+  isDark: boolean;
+}
+
+
+export interface ListItem {
+  id: string;
+  title: string;
+  paragraph: string;
+  completed: boolean;
+}
+
+export interface AssetData {
+  id: string;
+  name: string;
+  ip: string;
+  status: string;
+  image: string;
+}
+
+export interface HomePageProps {
+  contentAreaStyles: string;
+  isDark: boolean;
+}

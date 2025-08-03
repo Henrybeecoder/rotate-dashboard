@@ -1,13 +1,20 @@
-import { Box, Text } from '@chakra-ui/react';
+import { Box, Text, BoxProps, TextProps } from '@chakra-ui/react';
 
-interface SpecialTextBoxProps {
+interface SpecialTextBoxProps extends BoxProps {
   width?: string;
   content: string;
   status: 'error' | 'neutral' | 'pending' | 'justAdded' | 'success';
+  textProps?: TextProps;
 }
 
-export default function SpecialTextBox({ width, content, status }: SpecialTextBoxProps) {
-  // Define status styles using Chakra UI's style props
+export default function SpecialTextBox({ 
+  width, 
+  content, 
+  status,
+  textProps = {},
+  ...boxProps 
+}: SpecialTextBoxProps) {
+  
   const statusStyles = {
     error: {
       bg: '#fff1f0',
@@ -33,7 +40,7 @@ export default function SpecialTextBox({ width, content, status }: SpecialTextBo
 
   return (
     <Box
-      className="ibm-plex-mono-semibold"
+      className="font-mono"
       fontWeight="semibold"
       fontSize="13px"
       lineHeight="22px"
@@ -42,8 +49,14 @@ export default function SpecialTextBox({ width, content, status }: SpecialTextBo
       borderRadius="md"
       w={width || 'auto'}
       {...statusStyles[status]}
+      {...boxProps} 
     >
-      <Text>{content}</Text>
+      <Text 
+        fontFamily="var(--font-ibm-plex-mono)"
+        {...textProps}
+      >
+        {content}
+      </Text>
     </Box>
   );
 }
