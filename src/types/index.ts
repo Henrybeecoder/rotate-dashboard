@@ -16,8 +16,22 @@ export interface ExtraListItem {
   completed: boolean;
 }
 
-export interface HomeClientProps {
-  contentAreaStyles: string;
-  DescriptionComponent: React.ComponentType<{ extraListData: ExtraListItem[] }>;
-  DashboardComponent: React.ComponentType;
+
+
+
+export interface TableColumn {
+  key: string;
+  header: string;
+  width?: string;
+}
+
+export interface TableData {
+  [key: string]: any;
+}
+
+export interface PaginationInfo {
+  currentPage: number;
+  totalPages: number;
+  totalItems: number;
+  itemsPerPage: number;
 }

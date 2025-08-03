@@ -58,6 +58,7 @@ export default function HomePage({ contentAreaStyles }: HomePageProps) {
       <Flex
         style={{ marginLeft: '20px' }}
         className={contentAreaStyles}
+         direction={{ base: 'column', lg: 'row' }}
       >
         <DescriptionSection extraListData={fetchedData || []} />
         <DashboardSection />

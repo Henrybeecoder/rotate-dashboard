@@ -1,13 +1,7 @@
 import { Box, Flex } from '@chakra-ui/react';
 import { css } from '../../styled-system/css';
 import SideBar from "@/components/layout/sidebar";
-import DescriptionSection from "@/components/layout/descriptionSection";
-import DashboardSection from "@/components/layout/dashboardSection";
-
-import { useQuery } from '@tanstack/react-query';
-import Loader from '@/components/ui/loader';
 import HomePage from '@/screen/homepage';
-
 
 const baseLayoutStyles = css({
   height: '100vh',
@@ -17,10 +11,18 @@ const baseLayoutStyles = css({
   backgroundColor: 'gray.100',
 });
 
-const contentAreaStyles = css({
+
+const responsiveContentAreaStyles = css({
   flex: '1',
   gap: '4',
-  padding: 'spacing.24',
+  padding: {
+    base: 'spacing.16', 
+    md: 'spacing.24',   
+  },
+  paddingTop: {
+    base: '80px',       
+    md: 'spacing.24',   
+  },
 });
 
 export default function Home() {
@@ -33,15 +35,9 @@ export default function Home() {
         <SideBar />
         
         <HomePage
-          contentAreaStyles={contentAreaStyles}
-         
+          contentAreaStyles={responsiveContentAreaStyles}
         />
       </Flex>
     </Box>
   );
 }
-
-
-
-
-

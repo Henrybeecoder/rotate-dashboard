@@ -1,7 +1,7 @@
 'use client';
 import { css } from "../../../../styled-system/css";
 import { useState, useEffect } from "react";
-import { ChevronLeftIcon, HamburgerIcon } from "@chakra-ui/icons";
+import { ChevronLeftIcon, HamburgerIcon, CloseIcon } from "@chakra-ui/icons";
 import { IconButton, Box, Text, Flex, VStack, useBreakpointValue } from "@chakra-ui/react";
 import Link from "next/link";
 
@@ -157,10 +157,10 @@ const SideBar = () => {
   if (isMobile) {
     return (
       <>
-        {/* Sticky Header */}
+        {/* Mobile Header - Always visible */}
         <Box
           className={css({
-            position: "sticky",
+            position: "fixed",
             top: 0,
             left: 0,
             right: 0,
@@ -170,9 +170,10 @@ const SideBar = () => {
             borderColor: "gray.200",
             px: "16px",
             py: "12px",
+            height: "60px",
           })}
         >
-          <Flex justify="space-between" align="center">
+          <Flex justify="space-between" align="center" height="100%">
             <img 
               src="/logo.png" 
               alt="Logo" 
@@ -192,9 +193,10 @@ const SideBar = () => {
           </Flex>
         </Box>
 
-        {/* Mobile Sidebar Overlay */}
+        {/* Full Screen Mobile Sidebar */}
         {mobileMenuOpen && (
           <>
+            {/* Backdrop */}
             <Box
               className={css({
                 position: "fixed",
@@ -203,33 +205,151 @@ const SideBar = () => {
                 right: 0,
                 bottom: 0,
                 bg: "blackAlpha.600",
-                zIndex: 999,
+                zIndex: 1998,
               })}
               onClick={() => setMobileMenuOpen(false)}
             />
+            
+            {/* Full Screen Sidebar */}
             <Box
               className={css({
                 position: "fixed",
-                top: "65px", // Below header
-                left: "16px",
+                top: 0,
+                left: 0,
+                bottom: 0,
+                right: 0,
                 bg: "white",
-                width: "80px",
-                borderRadius: "16px",
-                zIndex: 1001,
-                shadow: "lg",
-                py: "16px",
-                px: "8px",
+                zIndex: 1999,
+                display: "flex",
+                flexDirection: "column",
+                animation: "slideInFromLeft 0.3s ease forwards",
               })}
             >
-              <VStack spacing={2}>
-                {menuItems.map((item) => (
-                  <MenuItem key={item.text} item={item} />
-                ))}
-                <Box className={css({ height: "1px", bg: "gray.200", width: "80%", my: "8px" })} />
-                {lastmenuItems.map((item) => (
-                  <MenuItem key={item.text} item={item} isLast />
-                ))}
-              </VStack>
+              {/* Mobile Sidebar Header */}
+              <Box
+                className={css({
+                  px: "16px",
+                  py: "12px",
+                  borderBottom: "1px solid",
+                  borderColor: "gray.200",
+                  height: "60px",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                })}
+              >
+                <img 
+                  src="/logo.png" 
+                  alt="Logo" 
+                  className={css({ 
+                    height: "32px",
+                    width: "auto"
+                  })} 
+                />
+                <IconButton
+                  aria-label="close menu"
+                  onClick={() => setMobileMenuOpen(false)}
+                  variant="ghost"
+                  size="sm"
+                >
+                  <CloseIcon />
+                </IconButton>
+              </Box>
+
+              {/* Mobile Sidebar Content */}
+              <Box
+                className={css({
+                  flex: 1,
+                  px: "16px",
+                  py: "24px",
+                  display: "flex",
+                  flexDirection: "column",
+                  justifyContent: "space-between",
+                })}
+              >
+                {/* Main Menu Items */}
+                <Box
+                  className={css({
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: "8px",
+                  })}
+                >
+                  {menuItems.map((item) => (
+                    <MenuItem key={item.text} item={item} />
+                  ))}
+                </Box>
+
+                {/* Bottom Section */}
+                <Box>
+                  {/* Settings and Profile Menu Items */}
+                  <Box
+                    className={css({
+                      display: "flex",
+                      flexDirection: "column",
+                      gap: "8px",
+                      mb: "24px",
+                      pt: "16px",
+                      borderTop: "1px solid",
+                      borderColor: "gray.200",
+                    })}
+                  >
+                    {lastmenuItems.map((item) => (
+                      <MenuItem key={item.text} item={item} isLast />
+                    ))}
+                  </Box>
+
+                  {/* User Profile Section */}
+                  <Box
+                    className={css({
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "space-between",
+                      pt: "16px",
+                      borderTop: "1px solid",
+                      borderColor: "gray.200",
+                    })}
+                  >
+                    <Flex gap={3} alignItems="center" flex={1}>
+                      <img 
+                        src="/assets/icons/sidebar-icons/real-profile.svg" 
+                        alt="Profile" 
+                        className={css({
+                          width: "40px",
+                          height: "40px",
+                          minWidth: "40px",
+                        })}
+                      />
+                      <Box flex={1}>
+                        <Text fontSize="md" fontWeight="medium">John Doe</Text>
+                        <Text fontSize="sm" color="secondary.500">john@example.com</Text>
+                      </Box>
+                    </Flex>
+                    <IconButton
+                      aria-label="logout"
+                      variant="ghost"
+                      size="sm"
+                      className={css({
+                        minWidth: "32px",
+                        width: "32px",
+                        height: "32px",
+                        _hover: {
+                          opacity: 0.8,
+                        },
+                      })}
+                    >
+                      <img 
+                        src="/assets/icons/sidebar-icons/logout-icon.svg" 
+                        alt="Logout" 
+                        className={css({
+                          width: "18px",
+                          height: "18px",
+                        })}
+                      />
+                    </IconButton>
+                  </Box>
+                </Box>
+              </Box>
             </Box>
           </>
         )}
@@ -258,7 +378,7 @@ const SideBar = () => {
       {/* Logo - only show when expanded OR always show at top when collapsed */}
       <Box className={css({ mb: isExpanded ? "32px" : "24px" })}>
         {isExpanded ? (
-       ''
+          ''
         ) : (
           <Box className={css({ display: "flex", justifyContent: "center" })}>
             <img 
@@ -389,7 +509,7 @@ const SideBar = () => {
         </Box>
       </VStack>
 
-      {/* Add CSS keyframes for tooltip animation */}
+      {/* Add CSS keyframes for animations */}
       <style jsx>{`
         @keyframes fadeIn {
           from {
@@ -399,6 +519,15 @@ const SideBar = () => {
           to {
             opacity: 1;
             transform: translateY(-50%) translateX(0);
+          }
+        }
+        
+        @keyframes slideInFromLeft {
+          from {
+            transform: translateX(-100%);
+          }
+          to {
+            transform: translateX(0);
           }
         }
       `}</style>

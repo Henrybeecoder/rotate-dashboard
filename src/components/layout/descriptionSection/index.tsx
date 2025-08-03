@@ -8,10 +8,11 @@ export default function DescriptionSection({extraListData} : ExtraListProps) {
   return (
     <Box
      p={"6"}
+      w={{ base: '100%', lg: '30%' }}
     className={css({
         shadow: "description-card",
         background: "white",
-        width: '30%',
+        
         height: '100vh', 
         borderRadius: "28px",
         display: "flex",
